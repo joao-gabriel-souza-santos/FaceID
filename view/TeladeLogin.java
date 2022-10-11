@@ -20,7 +20,7 @@ public class TeladeLogin extends JFrame {
     private JPasswordField txtSenha;
     private JButton entrar;
     private final String login = "admin";
-    private final String senha = "Emmersonporfavornaomereprova";
+    private final String senha = "Emmersonporfavornaomereprova";  
 
     // construtor
     public TeladeLogin() {
