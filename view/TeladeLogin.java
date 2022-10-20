@@ -69,11 +69,7 @@ public class TeladeLogin extends JFrame {
             }
 
         });
-
-
-
     }
-
     // METODO MAIN //
     public static void main(String[] args) {
         new TeladeLogin();
@@ -90,7 +86,5 @@ public class TeladeLogin extends JFrame {
             g.drawImage(img, 0, 0, this); // redesenha a imagem
         }
     }
-
     // tratar evento do botao cadastrar
-
 }

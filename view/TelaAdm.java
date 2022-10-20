@@ -52,9 +52,9 @@ public class TelaAdm extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Login: admin \n"
-                        + "Senha: Emmersonporfavornaomereprova", "Gerenciamento do sistema", 1);
-
+                dispose();
+                TelaGerenciaMatricula matric = new TelaGerenciaMatricula();
+                matric.setVisible(true);
             }
 
         });

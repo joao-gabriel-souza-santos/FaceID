@@ -16,25 +16,25 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.text.MaskFormatter;
 
 import UTIL.ManipularImagem;
 import UTIL.Mascara;
 import dao.UtilizaDAO;
 import model.Aluno;
 
-public class TeladeCadastro extends JFrame {
+public class AlterarCadastro extends JFrame {
     // variaveis de ambiente
     private ImageIcon fundo = new ImageIcon(getClass().getResource("telaCad.png"));
-    private JFormattedTextField txtmatricula, txtCpf, txtTelefone;
+    private JFormattedTextField  txtCpf, txtTelefone;
     private JTextField txtNome;
     private JLabel documento;
     private JButton salvar, carregarImg, voltar;
     private java.awt.image.BufferedImage imagem;
+    private int linhaSelecionada;
+    private Aluno aluno;
+    public AlterarCadastro(int linhaSelecionada) {
+        super("Tela de atualização de");
 
-    public TeladeCadastro() {
-        super("Tela de cadastro");
-        // CONFIGURAÇÃO DA TELA
         setSize(841, 600); // define o tamanho da tela
         setDefaultCloseOperation(EXIT_ON_CLOSE); // ação de fechar e aumentar a tela
         setLocationRelativeTo(null); // deixa a tela centralizada
@@ -67,7 +67,7 @@ public class TeladeCadastro extends JFrame {
 
         // adicionar campo matricula
 
-        txtmatricula = new JFormattedTextField();
+        final JFormattedTextField txtmatricula = new JFormattedTextField();
         painel.add(Mascara.mascaraMatricula(txtmatricula));
         txtmatricula.setBounds(100, 390, 320, 30);
 
@@ -92,6 +92,15 @@ public class TeladeCadastro extends JFrame {
 
         });
 
+        this.linhaSelecionada = linhaSelecionada;
+        aluno = UtilizaDAO.listarCadastros().get(linhaSelecionada);
+
+        txtmatricula.setText(String.valueOf(aluno.getMatricula()));
+        txtNome.setText(String.valueOf(aluno.getNome()));
+        txtCpf.setText(String.valueOf(aluno.getCpf()));
+        txtTelefone.setText(String.valueOf(aluno.getTelefone()));
+        ManipularImagem.exibiImagemLabel(aluno.getFoto(), documento);
+
         // adicionar botao salvar
         salvar = new JButton("Salvar");
         painel.add(salvar);
@@ -101,21 +110,19 @@ public class TeladeCadastro extends JFrame {
             @Override
             public void actionPerformed(ActionEvent t) {
                 try {
-                    Aluno aluno = new Aluno();
                     aluno.setMatricula(txtmatricula.getText());
                     aluno.setNome(txtNome.getText());
                     aluno.setCpf(txtCpf.getText());
                     aluno.setTelefone(txtTelefone.getText());
-                    aluno.setFoto(ManipularImagem.getImgBytes(imagem));
+                    
       
-                    UtilizaDAO.inserirAl(aluno);
-
-                    JOptionPane.showMessageDialog(null, "Cadastro efetuado", "Cadastro", 1);
+                    UtilizaDAO.editar(aluno);
+                    
+                    JOptionPane.showMessageDialog(null, "Atualização efetuada", "Cadastro", 1);
+                    TelaGerenciaMatricula.atualizaTabela();
                     dispose();
-                    TelaAdm adm = new TelaAdm();
-                    adm.setVisible(true);
                 } catch (Exception a) {
-                    JOptionPane.showMessageDialog(null, "Cadastro não efetuado,", "Cadastro", 0);
+                    JOptionPane.showMessageDialog(null, "Atualização não efetuada,", "Cadastro", 0);
                 }
             }
 
@@ -153,6 +160,9 @@ public class TeladeCadastro extends JFrame {
             super.paintComponent(g); // invoca a classe Graphic
             Image img = fundo.getImage(); // converte a imagem para o tipo image
             g.drawImage(img, 0, 0, this); // redimensiona a imagem
+
+
+
         }
 
     }
