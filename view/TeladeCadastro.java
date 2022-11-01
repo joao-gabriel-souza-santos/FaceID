@@ -16,7 +16,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.text.MaskFormatter;
+
+
+
 
 import UTIL.ManipularImagem;
 import UTIL.Mascara;
@@ -101,6 +103,7 @@ public class TeladeCadastro extends JFrame {
             @Override
             public void actionPerformed(ActionEvent t) {
                 try {
+                    UtilizaDAO dao = new UtilizaDAO();
                     Aluno aluno = new Aluno();
                     aluno.setMatricula(txtmatricula.getText());
                     aluno.setNome(txtNome.getText());
@@ -108,7 +111,7 @@ public class TeladeCadastro extends JFrame {
                     aluno.setTelefone(txtTelefone.getText());
                     aluno.setFoto(ManipularImagem.getImgBytes(imagem));
       
-                    UtilizaDAO.inserirAl(aluno);
+                    dao.salvar(aluno);
 
                     JOptionPane.showMessageDialog(null, "Cadastro efetuado", "Cadastro", 1);
                     dispose();

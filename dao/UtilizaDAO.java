@@ -11,51 +11,23 @@ import javax.swing.JOptionPane;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import model.Aluno;
 
-public class UtilizaDAO {
-    
-    private static List<Aluno> alunos = new ArrayList<Aluno>();
-    
-    public static boolean inserirAl(Aluno aluno){
-        Boolean retorno = false;
-        String sql = "INSERT INTO Aluno (matricula, nome, cpf, telefone, foto) values (?, ?, ?, ?, ?)";
+public class UtilizaDAO extends GenericDao {
 
-
-        try {
-            Connection conexao = new ConexaoMysql().getConnection();
-            PreparedStatement state = conexao.prepareStatement(sql);
-
-            state.setString(1, aluno.getMatricula());
-            state.setString(2, aluno.getNome());
-            state.setString(3, aluno.getCpf());
-            state.setString(4, aluno.getTelefone());
-            state.setBytes(5, aluno.getFoto());
-
-             retorno = state.execute();
-
-            
-
-        } catch (SQLException e) {
-           
-            JOptionPane.showMessageDialog(null, "Cadastro não efetuado,", "Cadastro", 0);
-        }
-  
-        
-        return retorno;
+    public void salvar(Aluno aluno) throws SQLException {
+        String sql = "INSERT INTO ALUNO(matricula, nome, cpf, telefone, foto) values (?, ?, ?, ?, ?)";
+        save(sql, aluno.getMatricula(), aluno.getNome(), aluno.getCpf(), aluno.getTelefone(), aluno.getFoto());
     }
 
-
-    public static List<Aluno> listarCadastros(){
-        String sql = "SELECT matricula, nome, cpf, telefone, foto FROM aluno";    
-        try{
-            Connection conexao = new ConexaoMysql().getConnection();
-            PreparedStatement state = conexao.prepareStatement(sql);
+    public List listarCadastros() throws SQLException {
+        List alunos = new ArrayList();
+        try {
+            String sql = "SELECT * FROM ALUNO";
+            PreparedStatement state = getConnection().prepareStatement(sql);
             ResultSet rs = state.executeQuery();
-            
-            while(rs.next()){
-    
+
+            while (rs.next()) {
                 Aluno aluno = new Aluno();
                 aluno.setMatricula(rs.getString("matricula"));
                 aluno.setNome(rs.getString("nome"));
@@ -63,86 +35,56 @@ public class UtilizaDAO {
                 aluno.setTelefone(rs.getString("telefone"));
                 aluno.setFoto(rs.getBytes("foto"));
                 alunos.add(aluno);
-                
-              
             }
 
-            conexao.close();
-        } catch(Exception e){
-            JOptionPane.showMessageDialog(null, "erro de listagem", "Listagem", 0);
+            rs.close();
+            state.close();
+            getConnection().close();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "erro de listagem" + e.getLocalizedMessage(), "Listagem", 0);
         }
+
         return alunos;
     }
 
+    public void editarSemImg(Aluno aluno) throws SQLException {
+        String sql = "UPDATE aluno SET nome=?, cpf=?, telefone=? WHERE matricula=?";
+        update(sql, aluno.getMatricula(), aluno.getNome(), aluno.getCpf(), aluno.getTelefone());
+    }
 
-    public static void editar(Aluno aluno){
+    public void editar(Aluno aluno) throws SQLException {
         String sql = "UPDATE aluno SET nome=?, cpf=?, telefone=?, foto=? WHERE matricula=?";
-        try{
-            Connection conexao = new ConexaoMysql().getConnection();
-            PreparedStatement state = conexao.prepareStatement(sql);
-            
-            state.setString(1, aluno.getNome());
-            state.setString(2, aluno.getCpf());
-            state.setString(3, aluno.getTelefone());
-            state.setBytes(4, aluno.getFoto());
-            state.setString(5, aluno.getMatricula());
-            
-
-            state.execute();
-
-            conexao.close();
-
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(null, "Erro ao atualizar tabela", "Cadastro", 0); 
-        }
-
+        update(sql, aluno.getMatricula(), aluno.getNome(), aluno.getCpf(), aluno.getTelefone(), aluno.getFoto());
     }
 
-    public static void excluir(Aluno aluno){
+    public void excluir(String matricula) throws SQLException {
         String sql = "DELETE FROM Aluno WHERE matricula = ?";
-        try{
-            Connection conexao = new ConexaoMysql().getConnection();
-            PreparedStatement state = conexao.prepareStatement(sql);
-            
-            state.setString(1, aluno.getMatricula());
-            
-
-            state.execute();
-
-            conexao.close();
-
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(null, "Erro ao excluir registro", "Excluir", 0); 
-        }
+        delete(sql, matricula);
     }
 
-    public static Aluno pesquisarCad(String matricula){
-        String sql = "SELECT * FROM aluno WHERE matricula = ?"; 
-        Aluno aluno = new Aluno();  
-        
-        try{
-            Connection conexao = new ConexaoMysql().getConnection();
-            PreparedStatement state = conexao.prepareStatement(sql);
-            ResultSet rs = state.executeQuery();
-                  
-       
-            rs.first();
-           
+    public Aluno pesquisarCad(String matricula) throws SQLException {
+        String sql = "SELECT * FROM aluno WHERE matricula = ?";
+        Aluno aluno = null;
+        PreparedStatement state = getConnection().prepareStatement(sql);
+
+        state.setString(1, matricula);
+        ResultSet rs = state.executeQuery();
+
+        while (rs.next()) {
+            aluno = new Aluno();
             aluno.setMatricula(rs.getString("matricula"));
             aluno.setNome(rs.getString("nome"));
             aluno.setCpf(rs.getString("cpf"));
             aluno.setTelefone(rs.getString("telefone"));
             aluno.setFoto(rs.getBytes("foto"));
-            alunos.add(aluno);
-            conexao.close();
 
-           
-        } catch(Exception e){
-             
         }
-        
+        rs.close();
+        state.close();
+        getConnection().close();
+
         return aluno;
-        
     }
-   
+
 }

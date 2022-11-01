@@ -3,9 +3,9 @@ package view;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
-
+import java.awt.image.BufferedImage;
 import java.io.File;
-
+import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -17,8 +17,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+
+
 import UTIL.ManipularImagem;
 import UTIL.Mascara;
+import controller.AlunoController;
 import dao.UtilizaDAO;
 import model.Aluno;
 
@@ -93,13 +96,20 @@ public class AlterarCadastro extends JFrame {
         });
 
         this.linhaSelecionada = linhaSelecionada;
-        aluno = UtilizaDAO.listarCadastros().get(linhaSelecionada);
+        UtilizaDAO dao = new UtilizaDAO();
+        try {
+            aluno = (Aluno) dao.listarCadastros().get(linhaSelecionada);
+        } catch (SQLException e1) {
+
+            e1.printStackTrace();
+        }
 
         txtmatricula.setText(String.valueOf(aluno.getMatricula()));
         txtNome.setText(String.valueOf(aluno.getNome()));
         txtCpf.setText(String.valueOf(aluno.getCpf()));
         txtTelefone.setText(String.valueOf(aluno.getTelefone()));
         ManipularImagem.exibiImagemLabel(aluno.getFoto(), documento);
+
 
         // adicionar botao salvar
         salvar = new JButton("Salvar");
@@ -110,19 +120,25 @@ public class AlterarCadastro extends JFrame {
             @Override
             public void actionPerformed(ActionEvent t) {
                 try {
-                    aluno.setMatricula(txtmatricula.getText());
-                    aluno.setNome(txtNome.getText());
-                    aluno.setCpf(txtCpf.getText());
-                    aluno.setTelefone(txtTelefone.getText());
-                    
-      
-                    UtilizaDAO.editar(aluno);
-                    
-                    JOptionPane.showMessageDialog(null, "Atualização efetuada", "Cadastro", 1);
-                    TelaGerenciaMatricula.atualizaTabela();
-                    dispose();
+                    if(imagem == null){
+                        AlunoController ac = new AlunoController();
+                        ac.editarSemImg(txtmatricula.getText(),txtNome.getText(), txtCpf.getText(), txtTelefone.getText());
+                        
+                        JOptionPane.showMessageDialog(null, "Atualização efetuada", "Cadastro", 1);
+                  
+                        dispose();
+                        TelaGerenciaMatricula.atualizaTabela();
+                    }else{
+                        AlunoController ac = new AlunoController();
+                        ac.editar(txtmatricula.getText(),txtNome.getText(), txtCpf.getText(), txtTelefone.getText(), ManipularImagem.getImgBytes(imagem));
+                        
+                        JOptionPane.showMessageDialog(null, "Atualização efetuada", "Cadastro", 1);
+                  
+                        dispose();
+                        TelaGerenciaMatricula.atualizaTabela();
+                    }
                 } catch (Exception a) {
-                    JOptionPane.showMessageDialog(null, "Atualização não efetuada,", "Cadastro", 0);
+                    JOptionPane.showMessageDialog(null, "Atualização não efetuada," + a.getLocalizedMessage(), "Cadastro", 0);
                 }
             }
 
@@ -147,10 +163,7 @@ public class AlterarCadastro extends JFrame {
         });
     }
 
-    public static void main(String[] args) {
-        new TeladeCadastro();
-    }
-
+  
     // CLASSES INTERNAS
 
     // Classe para adicionar uma imagem no painel
