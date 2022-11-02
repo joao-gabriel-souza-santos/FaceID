@@ -19,10 +19,7 @@ import org.bytedeco.javacv.FrameGrabber;
 import org.bytedeco.javacv.OpenCVFrameConverter;
 import org.bytedeco.javacv.OpenCVFrameGrabber;
 
-/**
- *
- * @author Jones
- */
+
 public class Captura {
     public static void main(String arg[]) throws FrameGrabber.Exception, InterruptedException {
         KeyEvent tecla = null;
