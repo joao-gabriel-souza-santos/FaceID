@@ -6,7 +6,7 @@ import java.sql.*;
 public class ConexaoMysql {
     
 
-    public Connection getConnection() throws SQLException{
+    public static Connection getConnection() throws SQLException{
       
         try{
             Connection conexao = DriverManager.getConnection("jdbc:mysql://localhost:3306/FaceID", "root", "00789Biel*");
@@ -16,7 +16,7 @@ public class ConexaoMysql {
         }
     }
 
-   public void closeConnection(Connection con){
+   public static void closeConnection(Connection con){
         try{
             if(con!=null){
                 con.close();

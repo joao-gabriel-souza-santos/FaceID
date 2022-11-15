@@ -100,7 +100,7 @@ public class AlterarCadastro extends JFrame {
         try {
             aluno = (Aluno) dao.listarCadastros().get(linhaSelecionada);
         } catch (SQLException e1) {
-
+            // TODO Auto-generated catch block
             e1.printStackTrace();
         }
 
@@ -120,23 +120,15 @@ public class AlterarCadastro extends JFrame {
             @Override
             public void actionPerformed(ActionEvent t) {
                 try {
-                    if(imagem == null){
+                  
                         AlunoController ac = new AlunoController();
-                        ac.editarSemImg(txtmatricula.getText(),txtNome.getText(), txtCpf.getText(), txtTelefone.getText());
+                        ac.editar(Integer.parseInt(txtmatricula.getText()),txtNome.getText(), txtCpf.getText(), txtTelefone.getText(), ManipularImagem.getImgBytes(imagem));
                         
                         JOptionPane.showMessageDialog(null, "Atualização efetuada", "Cadastro", 1);
                   
                         dispose();
                         TelaGerenciaMatricula.atualizaTabela();
-                    }else{
-                        AlunoController ac = new AlunoController();
-                        ac.editar(txtmatricula.getText(),txtNome.getText(), txtCpf.getText(), txtTelefone.getText(), ManipularImagem.getImgBytes(imagem));
-                        
-                        JOptionPane.showMessageDialog(null, "Atualização efetuada", "Cadastro", 1);
-                  
-                        dispose();
-                        TelaGerenciaMatricula.atualizaTabela();
-                    }
+                    
                 } catch (Exception a) {
                     JOptionPane.showMessageDialog(null, "Atualização não efetuada," + a.getLocalizedMessage(), "Cadastro", 0);
                 }

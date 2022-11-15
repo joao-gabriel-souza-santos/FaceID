@@ -95,31 +95,15 @@ public class TeladeCadastro extends JFrame {
         });
 
         // adicionar botao salvar
-        salvar = new JButton("Salvar");
+        salvar = new JButton("Próximo");
         painel.add(salvar);
         salvar.setBounds(340, 500, 120, 40);
         salvar.addActionListener(new java.awt.event.ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent t) {
-                try {
-                    UtilizaDAO dao = new UtilizaDAO();
-                    Aluno aluno = new Aluno();
-                    aluno.setMatricula(txtmatricula.getText());
-                    aluno.setNome(txtNome.getText());
-                    aluno.setCpf(txtCpf.getText());
-                    aluno.setTelefone(txtTelefone.getText());
-                    aluno.setFoto(ManipularImagem.getImgBytes(imagem));
-      
-                    dao.salvar(aluno);
-
-                    JOptionPane.showMessageDialog(null, "Cadastro efetuado", "Cadastro", 1);
-                    dispose();
-                    TelaAdm adm = new TelaAdm();
-                    adm.setVisible(true);
-                } catch (Exception a) {
-                    JOptionPane.showMessageDialog(null, "Cadastro não efetuado,", "Cadastro", 0);
-                }
+                dispose();
+                new Captura(Integer.parseInt(txtmatricula.getText()), txtNome.getText(), txtCpf.getText(), txtTelefone.getText());
             }
 
         });

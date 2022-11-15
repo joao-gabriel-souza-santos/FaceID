@@ -1,8 +1,9 @@
 package controller;
 
-import java.awt.List;
+
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
@@ -10,19 +11,18 @@ import dao.UtilizaDAO;
 import model.Aluno;
 
 public class AlunoController {
-    public void salvar(String matricula, String nome, String cpf, String telefone, byte[] foto)
+    public void salvar(int matricula, String nome, String cpf, String telefone)
             throws SQLException, ParseException {
         Aluno aluno = new Aluno();
         aluno.setMatricula(matricula);
         aluno.setNome(nome);
         aluno.setCpf(cpf);
         aluno.setTelefone(telefone);
-        aluno.setFoto(foto);
         new UtilizaDAO().salvar(aluno);
     }
 
     
-    public void editarSemImg(String matricula, String nome, String cpf, String telefone)
+    public void editarSemImg(int matricula, String nome, String cpf, String telefone)
             throws SQLException, ParseException
     {
         Aluno aluno = new Aluno();
@@ -34,7 +34,7 @@ public class AlunoController {
         new UtilizaDAO().editarSemImg(aluno);
     }
 
-    public void editar(String matricula, String nome, String cpf, String telefone, byte[] foto)
+    public void editar(int matricula, String nome, String cpf, String telefone, byte[] foto)
             throws SQLException, ParseException
     {
         Aluno aluno = new Aluno();
@@ -58,12 +58,23 @@ public class AlunoController {
     return null;
     }
 
+    public List mostraID(int matricula){
+        UtilizaDAO dao = new UtilizaDAO();
+        try{
+            return  dao.mostrarID(matricula);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, 
+            "Problemas ao localizar contaton" +  e.getLocalizedMessage());
+        }
 
-    public void excluir (String matricula) throws SQLException{
-        new UtilizaDAO().excluir(matricula);
+    return null;
     }
 
-    public Aluno pesquisarCad(String matricula) throws SQLException{
+    public void excluir (int i) throws SQLException{
+        new UtilizaDAO().excluir(i);
+    }
+
+    public Aluno pesquisarCad(int matricula) throws SQLException{
         UtilizaDAO dao = new UtilizaDAO();
         return dao.pesquisarCad(matricula);
     }

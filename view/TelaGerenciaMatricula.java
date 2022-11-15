@@ -59,7 +59,7 @@ public class TelaGerenciaMatricula extends JFrame {
         /////////////////////////////// ADICIONA CAMPO
         /////////////////////////////// PESQUISAR///////////////////////////////
         txtPesquisar = new JFormattedTextField();
-        painel.add(Mascara.mascaraMatricula(txtPesquisar));
+        painel.add(txtPesquisar);
         txtPesquisar.setBounds(210, 160, 290, 30);
 
         /////////////////////////////// ADICIONA BOTÃO
@@ -72,7 +72,7 @@ public class TelaGerenciaMatricula extends JFrame {
 
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        pesquisaCad(txtPesquisar.getText());
+                        pesquisaCad(Integer.parseInt(txtPesquisar.getText()));
                     }
 
                 });
@@ -123,6 +123,32 @@ public class TelaGerenciaMatricula extends JFrame {
         painel.add(botaoDeletar);
         botaoDeletar.setBounds(40, 400, 140, 40);
 
+        botaoDeletar.addActionListener(
+            new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    int linhaSelecionada = tabela.getSelectedRow();
+
+                    if (linhaSelecionada >= 0) {
+                        AlunoController ac = new AlunoController();
+                        Aluno al = (Aluno) ac.listarCadastros().get(linhaSelecionada);
+                        try {
+                            ac.excluir(al.getMatricula());
+                            atualizaTabela();
+                            JOptionPane.showMessageDialog(null, "Cadastr deletado", "Cadastro", 1);
+                        } catch (Exception e1) {
+                            JOptionPane.showMessageDialog(null, " Cadastro não foi deletado com sucesso", "Cadastro",
+                            JOptionPane.INFORMATION_MESSAGE);
+                        }  
+                    } else {
+                        JOptionPane.showMessageDialog(null, " necessario selecionar um Cadastro", "Aposento",
+                                JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
+
+            });
+
         /////////////////////////////// ADICIONA BOTÃO
         /////////////////////////////// VOLTAR///////////////////////////////
         voltar = new JButton();
@@ -134,9 +160,10 @@ public class TelaGerenciaMatricula extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+                dispose();
                 TelaAdm adm = new TelaAdm();
                 adm.setVisible(true);
-                dispose();
+                
             }
 
         });
@@ -159,7 +186,7 @@ public class TelaGerenciaMatricula extends JFrame {
 
     }
 
-    public void pesquisaCad(String matricula) {
+    public void pesquisaCad(int matricula) {
         TableModel tTabela = (DefaultTableModel) tabela.getModel();
         ((DefaultTableModel) tTabela).setNumRows(0);
         try {

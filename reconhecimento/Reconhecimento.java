@@ -26,19 +26,18 @@ public class Reconhecimento {
         String[] pessoas = {"", "Biel", "Julia", "Samuel"};
         camera.start();
         
-        CascadeClassifier detectorFace = new CascadeClassifier("src\\recursos\\haarcascade_frontalface_alt.xml");
+        CascadeClassifier detectorFace = new CascadeClassifier("D:\\projeto escola\\FaceID\\src\\recursos\\haarcascade_frontalface_alt.xml");
         
-        FaceRecognizer reconhecedor = EigenFaceRecognizer.create();            
-        reconhecedor.read("src\\recursos\\classificadorEigenFaces.yml");        
-        
+        // FaceRecognizer reconhecedor = EigenFaceRecognizer.create();            
+        // reconhecedor.read("src\\recursos\\classificadorEigenFaces.yml");        
+        // reconhecedor.setThreshold(15);
         
         // FaceRecognizer reconhecedor = FisherFaceRecognizer.create();
         // reconhecedor.read("src\\recursos\\classificadorFisherFaces.yml");
         
-        // FaceRecognizer reconhecedor = LBPHFaceRecognizer.create();
-        // reconhecedor.read("src\\recursos\\classificadorLBPH.yml");
-        
-        
+        FaceRecognizer reconhecedor = LBPHFaceRecognizer.create();
+        reconhecedor.read("D:\\projeto escola\\FaceID\\src\\recursos\\classificadorLBPH.yml");
+        reconhecedor.setThreshold(80);        
         CanvasFrame cFrame = new CanvasFrame("Reconhecimento", CanvasFrame.getDefaultGamma() / camera.getGamma());
         Frame frameCapturado = null;
         Mat imagemColorida = new Mat();

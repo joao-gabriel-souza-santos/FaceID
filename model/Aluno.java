@@ -3,7 +3,7 @@ package model;
 
 
 public class Aluno {
-    public Aluno(String matricula, String nome, String cpf, String telefone) {
+    public Aluno(int matricula, String nome, String cpf, String telefone) {
         this.matricula = matricula;
         this.nome = nome;
         this.cpf = cpf;
@@ -12,7 +12,7 @@ public class Aluno {
 
 
 
-    public Aluno(String matricula, String nome, String cpf, String telefone, byte[] foto) {
+    public Aluno(int matricula, String nome, String cpf, String telefone, byte[] foto) {
         this.matricula = matricula;
         this.nome = nome;
         this.cpf = cpf;
@@ -24,7 +24,7 @@ public class Aluno {
 
 
     //variaveis
-    private String matricula;
+    private int matricula;
     private String nome;
     private String cpf;
     private String telefone;
@@ -46,14 +46,14 @@ public class Aluno {
 
 
     //GETTERS E SETTERS
-    public String getMatricula() {
+    public int getMatricula() {
         return matricula;
     }
 
 
 
 
-    public void setMatricula(String matricula) {
+    public void setMatricula(int matricula) {
         this.matricula = matricula;
     }
 

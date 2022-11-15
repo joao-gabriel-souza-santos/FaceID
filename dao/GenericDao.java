@@ -56,4 +56,16 @@ public abstract class GenericDao {
 
     }
 
+    protected void pesquisar(String sql, Object...parametros)throws SQLException{
+        PreparedStatement state = getConnection().prepareStatement(sql);
+
+        for (int i = 0 ; i <parametros.length ; i++){
+            state.setObject(i + 1, parametros[i]);
+        }
+        state.execute();
+        state.close();
+        connection.close();
+
+    }
+
 }
