@@ -5,24 +5,33 @@ package model;
 public class Funcionario {
    
     //VARIAVEIS
-    private int codigo;
+    
+    public Funcionario(int codigo, int id, String nome, String cargo, String telefone) {
+        this.codigo = codigo;
+        this.id = id;
+        this.nome = nome;
+        this.cargo = cargo;
+        this.telefone = telefone;
+    }
+
+
+
+    private int codigo, id;
     private String nome;
-    private int cpf;
-    private int telefone;
+    private String cargo;
+    private String telefone;
     private byte[] foto;
     
+
+
+
+
     //CONSTRUTORES
     public Funcionario(){
         //CONSTRUTOR DEFAULT
     }
 
-    public Funcionario(int codigo, String nome, int cpf, int telefone, byte[] foto) {
-        this.codigo = codigo;
-        this.nome = nome;
-        this.cpf = cpf;
-        this.telefone = telefone;
-        this.foto = foto;
-    }
+
 
     public int getCodigo() {
         return codigo;
@@ -40,20 +49,13 @@ public class Funcionario {
         this.nome = nome;
     }
 
-    public int getCpf() {
-        return cpf;
-    }
 
-    public void setCpf(int cpf) {
-        this.cpf = cpf;
-    }
-
-    public int getTelefone() {
+    public String getTelefone() {
         return telefone;
     }
 
-    public void setTelefone(int telefone) {
-        this.telefone = telefone;
+    public void setTelefone(String telefone2) {
+        this.telefone = telefone2;
     }
 
     public byte[] getFoto() {
@@ -62,6 +64,30 @@ public class Funcionario {
 
     public void setFoto(byte[] foto) {
         this.foto = foto;
+    }
+
+
+
+    public int getId() {
+        return id;
+    }
+
+
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+
+
+    public String getCargo() {
+        return cargo;
+    }
+
+
+
+    public void setCargo(String cargo2) {
+        this.cargo = cargo2;
     }
     
   

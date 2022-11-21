@@ -9,20 +9,23 @@ import javax.swing.JOptionPane;
 
 import dao.UtilizaDAO;
 import model.Aluno;
+import model.Funcionario;
 
 public class AlunoController {
-    public void salvar(int matricula, String nome, String cpf, String telefone)
+    public void salvarAl(int id, String matricula, String nome, String cpf, String telefone)
             throws SQLException, ParseException {
         Aluno aluno = new Aluno();
+        aluno.setId(id);
         aluno.setMatricula(matricula);
         aluno.setNome(nome);
         aluno.setCpf(cpf);
         aluno.setTelefone(telefone);
-        new UtilizaDAO().salvar(aluno);
+        new UtilizaDAO().salvarAl(aluno);
     }
 
+
     
-    public void editarSemImg(int matricula, String nome, String cpf, String telefone)
+    public void editarSemImg(String matricula, String nome, String cpf, String telefone)
             throws SQLException, ParseException
     {
         Aluno aluno = new Aluno();
@@ -34,15 +37,10 @@ public class AlunoController {
         new UtilizaDAO().editarSemImg(aluno);
     }
 
-    public void editar(int matricula, String nome, String cpf, String telefone, byte[] foto)
+    public void editar(Aluno aluno)
             throws SQLException, ParseException
     {
-        Aluno aluno = new Aluno();
-        aluno.setMatricula(matricula);
-        aluno.setNome(nome);
-        aluno.setCpf(cpf);
-        aluno.setTelefone(telefone);
-        aluno.setFoto(foto);
+
         new UtilizaDAO().editar(aluno);
     }
 
@@ -52,31 +50,27 @@ public class AlunoController {
             return  dao.listarCadastros();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, 
-            "Problemas ao localizar contaton" +  e.getLocalizedMessage());
+            "Problemas ao localizar cadastro" +  e.getLocalizedMessage());
         }
 
     return null;
     }
 
-    public List mostraID(int matricula){
-        UtilizaDAO dao = new UtilizaDAO();
-        try{
-            return  dao.mostrarID(matricula);
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, 
-            "Problemas ao localizar contaton" +  e.getLocalizedMessage());
-        }
+    
 
-    return null;
+
+    public void excluir (String string) throws SQLException{
+        new UtilizaDAO().excluir(string);
     }
 
-    public void excluir (int i) throws SQLException{
-        new UtilizaDAO().excluir(i);
+    public Aluno pesquisarCad(int id) throws SQLException{
+        UtilizaDAO dao = new UtilizaDAO();
+        return dao.pesquisarCad(id);
     }
 
-    public Aluno pesquisarCad(int matricula) throws SQLException{
+    public Aluno pesquisaMatricula(String matricula) throws SQLException{
         UtilizaDAO dao = new UtilizaDAO();
-        return dao.pesquisarCad(matricula);
+        return dao.pesquisaMatricula(matricula);
     }
 
     

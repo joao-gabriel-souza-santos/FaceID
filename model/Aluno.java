@@ -3,16 +3,18 @@ package model;
 
 
 public class Aluno {
-    public Aluno(int matricula, String nome, String cpf, String telefone) {
+    public Aluno(int id, String matricula, String nome, String cpf, String telefone) {
+        this.id = id;
         this.matricula = matricula;
         this.nome = nome;
         this.cpf = cpf;
         this.telefone = telefone;
+        
     }
 
 
 
-    public Aluno(int matricula, String nome, String cpf, String telefone, byte[] foto) {
+    public Aluno(String matricula, String nome, String cpf, String telefone, byte[] foto) {
         this.matricula = matricula;
         this.nome = nome;
         this.cpf = cpf;
@@ -24,13 +26,26 @@ public class Aluno {
 
 
     //variaveis
-    private int matricula;
+    private String matricula;
     private String nome;
     private String cpf;
     private String telefone;
     private byte[] foto;
+    private int id;
     
     
+
+
+    public int getId() {
+        return id;
+    }
+
+
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
 
 
     //CONSTRUTORES
@@ -46,15 +61,15 @@ public class Aluno {
 
 
     //GETTERS E SETTERS
-    public int getMatricula() {
+    public String getMatricula() {
         return matricula;
     }
 
 
 
 
-    public void setMatricula(int matricula) {
-        this.matricula = matricula;
+    public void setMatricula(String string) {
+        this.matricula = string;
     }
 
 

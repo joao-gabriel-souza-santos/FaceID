@@ -15,7 +15,7 @@ import javax.swing.JTextField;
 public class TeladeLogin extends JFrame {
     // variaveis de instancia
 
-    private ImageIcon fundo = new ImageIcon(getClass().getResource("teladelogin.png"));
+    private ImageIcon fundo = new ImageIcon(getClass().getResource("imagens\\teladelogin.png"));
     private JTextField txtLogin;
     private JPasswordField txtSenha;
     private JButton entrar;

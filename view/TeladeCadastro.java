@@ -27,12 +27,14 @@ import model.Aluno;
 
 public class TeladeCadastro extends JFrame {
     // variaveis de ambiente
-    private ImageIcon fundo = new ImageIcon(getClass().getResource("telaCad.png"));
+    private ImageIcon fundo = new ImageIcon(getClass().getResource("imagens\\telaCad.png"));
     private JFormattedTextField txtmatricula, txtCpf, txtTelefone;
-    private JTextField txtNome;
+    private JTextField txtNome, txtId;
     private JLabel documento;
     private JButton salvar, carregarImg, voltar;
     private java.awt.image.BufferedImage imagem;
+    
+    private int id;
 
     public TeladeCadastro() {
         super("Tela de cadastro");
@@ -51,19 +53,19 @@ public class TeladeCadastro extends JFrame {
         // adicionar campo nome
         txtNome = new JTextField();
         painel.add(txtNome);
-        txtNome.setBounds(100, 160, 320, 30);
+        txtNome.setBounds(60, 120, 350, 30);
         
         // adicionar campo cpf
    
             txtCpf = new JFormattedTextField();
             painel.add(Mascara.mascaraCpf(txtCpf));
-            txtCpf.setBounds(100, 240, 320, 30);
+            txtCpf.setBounds(60, 210, 350, 30);
          
     
             // adicionar campo telefone
             txtTelefone = new JFormattedTextField();
             painel.add(Mascara.mascaraTelefone(txtTelefone));
-            txtTelefone.setBounds(100, 320, 320, 30);
+            txtTelefone.setBounds(60, 290, 350, 30);
 
 
 
@@ -71,7 +73,19 @@ public class TeladeCadastro extends JFrame {
 
         txtmatricula = new JFormattedTextField();
         painel.add(Mascara.mascaraMatricula(txtmatricula));
-        txtmatricula.setBounds(100, 390, 320, 30);
+        txtmatricula.setBounds(60, 370, 350, 30);
+
+        //adiciona campo id
+        txtId = new JTextField();
+        painel.add(txtId);
+        txtId.setBounds(60, 450, 350, 30);
+        try {
+            UtilizaDAO d = new UtilizaDAO();
+            id = d.mostrarID();
+            txtId.setText(Integer.toString(id));
+        } catch (Exception e) {
+            
+        }
 
         // adicionar campo documento
         documento = new JLabel();
@@ -103,7 +117,13 @@ public class TeladeCadastro extends JFrame {
             @Override
             public void actionPerformed(ActionEvent t) {
                 dispose();
-                new Captura(Integer.parseInt(txtmatricula.getText()), txtNome.getText(), txtCpf.getText(), txtTelefone.getText());
+                Aluno aluno = new Aluno();
+                aluno.setId(Integer.parseInt(txtId.getText()));
+                aluno.setMatricula(txtmatricula.getText());
+                aluno.setNome(txtNome.getText());
+                aluno.setCpf(txtCpf.getText());
+                aluno.setTelefone(txtTelefone.getText());
+                new Captura(aluno);
             }
 
         });
@@ -111,7 +131,7 @@ public class TeladeCadastro extends JFrame {
         // adicionar botao voltar
         voltar = new JButton();
         painel.add(voltar);
-        voltar.setIcon(new javax.swing.ImageIcon(getClass().getResource("botaoVoltar.png"))); // NOI18N
+        voltar.setIcon(new javax.swing.ImageIcon(getClass().getResource("imagens\\botaoVoltar.png"))); // NOI18N
         voltar.setBounds(20, 10, 30, 40);
         // AÇÃO DO BOTAO VOLTAR
         voltar.addActionListener(new java.awt.event.ActionListener() {
@@ -119,8 +139,8 @@ public class TeladeCadastro extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                TelaAdm adm = new TelaAdm();
-                adm.setVisible(true);
+                SelecionaCad sl = new SelecionaCad();
+                sl.setVisible(true);
 
             }
 

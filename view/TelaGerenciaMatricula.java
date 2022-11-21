@@ -27,11 +27,11 @@ import model.Aluno;
 
 public class TelaGerenciaMatricula extends JFrame {
     // Variaveis de instancia
-    private ImageIcon fundo = new ImageIcon(getClass().getResource("TelaGerenciaMatricula.png"));
+    private ImageIcon fundo = new ImageIcon(getClass().getResource("imagens\\TelaGerenciaMatricula.png"));
     private JButton voltar, botaoPesquisar, botaoListar, botaoAtualizar, botaoDeletar;
     private JFormattedTextField txtPesquisar;
     private static JTable tabela;
-    private static String[] colunas = { "Matricula", "Nome", "CPF", "Telefone" };
+    private static String[] colunas = { "ID aluno", "Matricula", "Nome", "CPF", "Telefone" };
     private static Object[][] dados = {};
     private static List alunoList = new AlunoController().listarCadastros();
 
@@ -59,7 +59,7 @@ public class TelaGerenciaMatricula extends JFrame {
         /////////////////////////////// ADICIONA CAMPO
         /////////////////////////////// PESQUISAR///////////////////////////////
         txtPesquisar = new JFormattedTextField();
-        painel.add(txtPesquisar);
+        painel.add(Mascara.mascaraMatricula(txtPesquisar));
         txtPesquisar.setBounds(210, 160, 290, 30);
 
         /////////////////////////////// ADICIONA BOTÃO
@@ -72,7 +72,7 @@ public class TelaGerenciaMatricula extends JFrame {
 
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        pesquisaCad(Integer.parseInt(txtPesquisar.getText()));
+                        pesquisaCad(txtPesquisar.getText());
                     }
 
                 });
@@ -153,7 +153,7 @@ public class TelaGerenciaMatricula extends JFrame {
         /////////////////////////////// VOLTAR///////////////////////////////
         voltar = new JButton();
         painel.add(voltar);
-        voltar.setIcon(new javax.swing.ImageIcon(getClass().getResource("botaoVoltar.png"))); // NOI18N
+        voltar.setIcon(new javax.swing.ImageIcon(getClass().getResource("imagens\\botaoVoltar.png"))); // NOI18N
         voltar.setBounds(20, 10, 30, 30);
         // AÇÃO DO BOTAO VOLTAR
         voltar.addActionListener(new java.awt.event.ActionListener() {
@@ -161,8 +161,8 @@ public class TelaGerenciaMatricula extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                TelaAdm adm = new TelaAdm();
-                adm.setVisible(true);
+                GerenciaCad cad = new GerenciaCad();
+                cad.setVisible(true);
                 
             }
 
@@ -186,19 +186,20 @@ public class TelaGerenciaMatricula extends JFrame {
 
     }
 
-    public void pesquisaCad(int matricula) {
+    public void pesquisaCad(String matricula) {
         TableModel tTabela = (DefaultTableModel) tabela.getModel();
         ((DefaultTableModel) tTabela).setNumRows(0);
         try {
 
-            Aluno aluno = new AlunoController().pesquisarCad(matricula);
+            Aluno aluno = new AlunoController().pesquisaMatricula(matricula);
             int linha = 0;
 
             ((DefaultTableModel) tTabela).addRow(new Object[] { 1 });
-            tabela.setValueAt(aluno.getMatricula(), linha, 0);
-            tabela.setValueAt(aluno.getNome(), linha, 1);
-            tabela.setValueAt(aluno.getCpf(), linha, 2);
-            tabela.setValueAt(aluno.getTelefone(), linha, 3);
+            tabela.setValueAt(aluno.getId(), linha, 0);
+            tabela.setValueAt(aluno.getMatricula(), linha, 1);
+            tabela.setValueAt(aluno.getNome(), linha, 2);
+            tabela.setValueAt(aluno.getCpf(), linha, 3);
+            tabela.setValueAt(aluno.getTelefone(), linha, 4);
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,
@@ -217,11 +218,11 @@ public class TelaGerenciaMatricula extends JFrame {
             aluno = (Aluno) alunoList.get(linha);
 
             ((DefaultTableModel) tTabela).addRow(new Object[] { 1 });
-
-            tabela.setValueAt(aluno.getMatricula(), linha, 0);
-            tabela.setValueAt(aluno.getNome(), linha, 1);
-            tabela.setValueAt(aluno.getCpf(), linha, 2);
-            tabela.setValueAt(aluno.getTelefone(), linha, 3);
+            tabela.setValueAt(aluno.getId(), linha, 0);
+            tabela.setValueAt(aluno.getMatricula(), linha, 1);
+            tabela.setValueAt(aluno.getNome(), linha, 2);
+            tabela.setValueAt(aluno.getCpf(), linha, 3);
+            tabela.setValueAt(aluno.getTelefone(), linha, 4);
         }
     }
 

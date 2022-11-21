@@ -20,6 +20,16 @@ public abstract class GenericDao {
         return connection;
     }
 
+    protected void saveID (String sql, Object... parametros)throws SQLException{
+        PreparedStatement state = getConnection().prepareStatement(sql);
+
+        for(int i = 0 ; i  < parametros.length ; i++){
+            state.setObject(i + 1, parametros[i]);
+        }
+        state.execute();
+        state.close();
+}   
+
     protected void save (String sql, Object... parametros)throws SQLException{
             PreparedStatement state = getConnection().prepareStatement(sql);
 
@@ -27,18 +37,20 @@ public abstract class GenericDao {
                 state.setObject(i + 1, parametros[i]);
             }
 
+
+
             state.execute();
             state.close();
             connection.close();
     }   
 
-    protected  void update(String sql, Object id, Object... parametros)throws SQLException{
+    protected  void update(String sql,  Object... parametros)throws SQLException{
         PreparedStatement  state  = getConnection().prepareStatement(sql);
 
         for(int i = 0 ; i <parametros.length ; i++){
             state.setObject(i + 1, parametros[i]);
         }
-        state.setObject(parametros.length + 1, id);
+     
         state.execute();
         state.close();
         connection.close();
@@ -67,5 +79,7 @@ public abstract class GenericDao {
         connection.close();
 
     }
+
+
 
 }

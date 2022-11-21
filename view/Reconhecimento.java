@@ -10,7 +10,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
+
 import javax.swing.JPanel;
 
 import org.bytedeco.javacpp.BytePointer;
@@ -31,7 +31,11 @@ import org.bytedeco.opencv.opencv_objdetect.CascadeClassifier;
 import org.bytedeco.opencv.opencv_videoio.VideoCapture;
 
 import controller.AlunoController;
+import controller.FuncionarioController;
+import controller.VisitanteController;
 import model.Aluno;
+import model.Funcionario;
+import model.Visitante;
 
 import java.awt.image.BufferedImage;
 
@@ -46,16 +50,16 @@ public class Reconhecimento extends JFrame {
     RectVector detectedFaces = new RectVector();
 
     String nome;
-    int matricula;
+    int id;
 
-    private ImageIcon fundo = new ImageIcon(getClass().getResource("TelaReconhecimento.png"));
-    private JLabel labelMatricula, labelNome, labelReconhecimento;
+    private ImageIcon fundo = new ImageIcon(getClass().getResource("imagens\\TelaReconhecimento.png"));
+    private JLabel labelMatricula, labelNome, labelReconhecimento, labelOcupacao;
     private JButton voltar;
     public Reconhecimento (){
         generateComponents();
 
         recognizer.read("D:\\projeto escola\\FaceID\\src\\recursos\\classificadorLBPH.yml");
-        recognizer.setThreshold(80);
+        recognizer.setThreshold(60);
         iniciarCamera();
     }
 
@@ -75,12 +79,16 @@ public class Reconhecimento extends JFrame {
         ////////////////////////////// LABEL CAPTURA ///////////////////////////////
         labelNome = new JLabel("nome");
         painel.add(labelNome);
-        labelNome.setBounds(630, 250, 160, 30);
+        labelNome.setBounds(640, 230, 170, 30);
 
         ////////////////////////////// LABEL CONTADOR ///////////////////////////////
-        labelMatricula = new JLabel("Matricula");
+        labelMatricula = new JLabel("ID");
         painel.add(labelMatricula);
-        labelMatricula.setBounds(630, 390, 160, 30);
+        labelMatricula.setBounds(640, 330, 160, 30);
+
+        labelOcupacao = new JLabel("Ocupação");
+        painel.add(labelOcupacao);
+        labelOcupacao.setBounds(640, 440, 160, 30);
 
 
         labelReconhecimento = new JLabel();
@@ -89,7 +97,7 @@ public class Reconhecimento extends JFrame {
     
         voltar = new JButton();
         painel.add(voltar);
-        voltar.setIcon(new javax.swing.ImageIcon(getClass().getResource("botaoVoltar.png"))); // NOI18N
+        voltar.setIcon(new javax.swing.ImageIcon(getClass().getResource("imagens\\botaoVoltar.png"))); // NOI18N
         voltar.setBounds(20, 10, 30, 40);
         // AÇÃO DO BOTAO VOLTAR
         voltar.addActionListener(new java.awt.event.ActionListener() {
@@ -153,17 +161,19 @@ public class Reconhecimento extends JFrame {
 
                                 if (prediction == -1) {
                                     rectangle(cameraImage, dadosFace, new Scalar(0, 0, 255, 3), 3, 0, 0);
-                                    matricula = 0;
+                                    id = 0;
                                     labelNome.setText("Desconhecido");
                                     labelMatricula.setText("nao reconhecido");
 
                                 } else {
                                     rectangle(cameraImage, dadosFace, new Scalar(0, 255, 0, 3), 3, 0, 0);
                                     System.out.println(confidence.get(0));
-                                    matricula = prediction ;
+                                    id = prediction;
 //                                    System.out.println("PESSOA RECONHECIDA COMO: " + idPerson);
-                                    reconhecimento();
-                                    labelMatricula.setText(Integer.toString(matricula));
+                                    reconhecimentoFunc();
+                                    reconhecimentoAl();
+                                    reconhecimentoVisi();
+                                    labelMatricula.setText(Integer.toString(id));
                                    
                                 }
 
@@ -191,11 +201,45 @@ public class Reconhecimento extends JFrame {
     }
 
 
-    private void  reconhecimento(){
-        Aluno aluno = new Aluno();
-        try {
-             aluno = new AlunoController().pesquisarCad(matricula);
-             labelNome.setText(aluno.getNome());
+    private void  reconhecimentoFunc(){
+        try { 
+            Funcionario func = new FuncionarioController().pesquisarFunc(id);
+            if(func.getNome() != null){
+                labelNome.setText(func.getNome());
+                labelOcupacao.setText("Funcionario");
+            }else {
+                labelNome.setText("");
+            }
+        } catch (Exception e) {
+        //   JOptionPane.showMessageDialog(null, e.getMessage(), "rec", 0);
+        }
+       
+    }
+
+    private void  reconhecimentoAl(){
+        try { 
+            Aluno al = new AlunoController().pesquisarCad(id);
+            if(al.getNome() != null){
+                labelNome.setText(al.getNome());
+                labelOcupacao.setText("Aluno");
+            } else {
+                labelNome.setText("");
+            }
+        } catch (Exception e) {
+        //   JOptionPane.showMessageDialog(null, e.getMessage(), "rec", 0);
+        }
+       
+    }
+
+    private void  reconhecimentoVisi(){
+        try { 
+            Visitante visi = new VisitanteController().pesquisarVisi(id);
+            if(visi.getNome() != null){
+                labelNome.setText(visi.getNome());
+                labelOcupacao.setText("Visitante");
+            } else {
+                labelNome.setText("");
+            }
         } catch (Exception e) {
         //   JOptionPane.showMessageDialog(null, e.getMessage(), "rec", 0);
         }

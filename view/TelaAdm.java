@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 
 public class TelaAdm extends JFrame {
     // variaveis de ambiente
-    private ImageIcon fundo = new ImageIcon(getClass().getResource("telaAdm.png"));
+    private ImageIcon fundo = new ImageIcon(getClass().getResource("imagens\\telaAdm.png"));
     private JButton recFacial, gerenciamentoSist, sobre, voltar, cadastrar;
 
     // construtor
@@ -31,7 +31,7 @@ public class TelaAdm extends JFrame {
         painel.setLayout(null);
 
         // adicionar botao reconhecimento facial dos alunos
-        recFacial = new JButton("RECONHECIMENTO FACIAL DOS ALUNOS");
+        recFacial = new JButton("RECONHECIMENTO FACIAL");
         painel.add(recFacial);
         recFacial.setBounds(230, 182, 360, 50);
         recFacial.addActionListener(new java.awt.event.ActionListener() {
@@ -55,8 +55,8 @@ public class TelaAdm extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                TelaGerenciaMatricula matric = new TelaGerenciaMatricula();
-                matric.setVisible(true);
+               GerenciaCad cad = new GerenciaCad();
+                cad.setVisible(true);
             }
 
         });
@@ -70,7 +70,7 @@ public class TelaAdm extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                TeladeCadastro cad = new TeladeCadastro();
+                SelecionaCad cad = new SelecionaCad();
                 cad.setVisible(true);
             }
 
@@ -94,7 +94,7 @@ public class TelaAdm extends JFrame {
         // adicionar botao voltar
         voltar = new JButton();
         painel.add(voltar);
-        voltar.setIcon(new javax.swing.ImageIcon(getClass().getResource("botaoVoltar.png"))); // NOI18N
+        voltar.setIcon(new javax.swing.ImageIcon(getClass().getResource("imagens\\botaoVoltar.png"))); // NOI18N
         voltar.setBounds(20, 10, 30, 40);
         // AÇÃO DO BOTAO VOLTAR
         voltar.addActionListener(new java.awt.event.ActionListener() {

@@ -1,10 +1,13 @@
 package view;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 
 import javax.imageio.ImageIO;
+import javax.lang.model.util.ElementScanner14;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -15,7 +18,7 @@ import javax.swing.JPanel;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.sql.SQLException;
+
 
 import org.bytedeco.javacpp.BytePointer;
 import static org.bytedeco.opencv.global.opencv_imgcodecs.imencode;
@@ -36,8 +39,12 @@ import org.bytedeco.opencv.opencv_videoio.VideoCapture;
 
 import UTIL.TrainLBPH;
 import controller.AlunoController;
+import controller.FuncionarioController;
+import controller.VisitanteController;
 import dao.UtilizaDAO;
 import model.Aluno;
+import model.Funcionario;
+import model.Visitante;
 
 
 
@@ -58,31 +65,53 @@ public class Captura extends JFrame {
     RectVector detectedFaces = new RectVector();
     int numAmostras = 25, amostras = 1;
 
-    int matricula;
+    String matricula;
 
-    private String nome, cpf, telefone;
+    int id;
+
+    private String nome, cpf, telefone, cargo, motivo;
+
+    int codigo;
     private JLabel labelCaptura, labelContador;
-    private JButton botaoIniciarCaptura,botaoCaptura, voltar;
-    private ImageIcon fundo = new ImageIcon(getClass().getResource("TelaCaptura.png"));
+    private JButton botaoCaptura, voltar;
+    private ImageIcon fundo = new ImageIcon(getClass().getResource("imagens\\TelaCaptura.png"));
 
-    public Captura(int matricula, String nome, String cpf, String telefone) {
+    public Captura(Aluno aluno) {
         iniciarComponentes();
-
-        this.matricula = matricula;
-        this.nome = nome;
-        this.cpf = cpf;
-        this.telefone = telefone;
+        this.id = aluno.getId();
+        this.matricula = aluno.getMatricula();
+        this.nome = aluno.getNome();
+        this.cpf = aluno.getCpf();
+        this.telefone = aluno.getTelefone();
 
         iniciarCamera();
 
     }
 
+    public Captura(Funcionario func) {
+        iniciarComponentes();
+        this.id = func.getId();
+        this.codigo = func.getCodigo();
+        this.nome = func.getNome();
+        this.cargo = func.getCargo();
+        this.telefone = func.getTelefone();
+
+        iniciarCamera();
+    }
 
 
 
 
+    public Captura(Visitante visi) {
+        iniciarComponentes();
+        this.id = visi.getId();
+        this.cpf = visi.getCpf();
+        this.nome = visi.getNome();
+        this.motivo = visi.getMotivo();
+        this.telefone = visi.getTelefone();
 
-
+        iniciarCamera();
+    }
 
     private void iniciarComponentes(){
         setSize(841, 600); // define tamanho da tela
@@ -102,28 +131,29 @@ public class Captura extends JFrame {
         labelCaptura.setBounds(260, 160, 340, 300);
 
         ////////////////////////////// LABEL CONTADOR ///////////////////////////////
+        
         labelContador = new JLabel("00");
+        labelContador.setFont(new Font("Times new Roman", Font.BOLD, 17));
+        labelContador.setForeground(Color.WHITE);
         painel.add(labelContador);
-        labelContador.setBounds(398, 480, 40, 20);
+        labelContador.setBounds(410, 477, 40, 20);
         
         ////////////////////////////// BOTÃO CAPTURA ///////////////////////////////
-        botaoCaptura = new JButton(" Captura");
+        botaoCaptura = new JButton("Captura");
         painel.add(botaoCaptura);
-        botaoCaptura.setBounds(200, 540, 150, 20);
+        botaoCaptura.setBounds(350, 540, 150, 20);
         botaoCaptura.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 actionPerformed(evt);
             }
         });
         
-        botaoIniciarCaptura = new JButton(" Iniciar Captura");
-        painel.add(botaoIniciarCaptura);
-        botaoIniciarCaptura.setBounds(350, 540, 150, 20);
+   
         
 
         voltar = new JButton();
         painel.add(voltar);
-        voltar.setIcon(new javax.swing.ImageIcon(getClass().getResource("botaoVoltar.png"))); // NOI18N
+        voltar.setIcon(new javax.swing.ImageIcon(getClass().getResource("imagens\\botaoVoltar.png"))); // NOI18N
         voltar.setBounds(20, 10, 30, 40);
         // AÇÃO DO BOTAO VOLTAR
         voltar.addActionListener(new java.awt.event.ActionListener() {
@@ -184,15 +214,17 @@ public class Captura extends JFrame {
                                 opencv_imgproc.resize(face, face, new Size(160, 160));
 
                                 if (botaoCaptura.getModel().isPressed()) { //quando apertar o botão saveButton
-                                        if (amostras <= numAmostras) {
+                                      
+                                    if (amostras <= numAmostras) {
 //                                        salva a imagem cortada [160,160]
 //                                        nome do arquivo: idpessoa + a contagem de fotos. ex: person.10(id).6(sexta foto).jpg
-                                            String cropped = "D:\\projeto escola\\FaceID\\src\\fotos\\pessoa." + matricula+ "." + amostras + ".jpg";
+                                            String cropped = "D:\\projeto escola\\FaceID\\src\\fotos\\pessoa." + id+ "." + amostras + ".jpg";
                                             imwrite(cropped, face);
 
                                             //System.out.println("Foto " + amostra + " capturada\n");
-                                            labelContador.setText(String.valueOf(amostras) + "/25");
+                                            labelContador.setText(String.valueOf(amostras + 1) + "/25");
                                             amostras++;
+                                             
                                         }
                                         
                                         if (amostras >= numAmostras) {
@@ -223,7 +255,7 @@ public class Captura extends JFrame {
                                             }
                                         }
                                     } catch (Exception e) {
-                                        JOptionPane.showMessageDialog(null, "Cadastro não efetuado," + e.getMessage(), "Cadastro", 0);
+                                       
                                         
                                     }
                                 }
@@ -241,22 +273,22 @@ public class Captura extends JFrame {
 
     public void inserirBanco(){
         try {
-            AlunoController ac = new AlunoController();
-            ac.salvar(this.matricula, this.nome, this.cpf, this.telefone);
-
-            JOptionPane.showMessageDialog(null, "Cadastro efetuado", "Cadastro", 1);
-            
-           
+            if(this.codigo == 0 && motivo == null){
+                AlunoController ac = new AlunoController();
+                ac.salvarAl(this.id, this.matricula, this.nome, this.cpf, this.telefone); 
+            } else 
+                if(this.matricula == null && motivo ==  null){
+                    FuncionarioController func = new FuncionarioController();
+                    func.salvarFunc(this.id, this.codigo, this.nome, this.cargo, this.telefone);
+                }
+                    else 
+                        if(this.motivo != null){
+                            VisitanteController visi = new VisitanteController();
+                            visi.salvarVisi(this.id, this.cpf, this.nome, this.motivo, this.telefone);
+                        }   
         } catch (Exception a) {
             JOptionPane.showMessageDialog(null, "Cadastro não efetuado," + a.getMessage(), "Cadastro", 0);
         }
-    }
-
-    public static void main(String[] args) {
-         String  nome = "Biel", cpf = "2313", telefone = "32132";
-         int matricula = 2;
-        Captura cap = new Captura(matricula, nome, cpf, telefone);
-        cap.iniciarCamera();
     }
 
     public void pararCamera(){
@@ -281,6 +313,15 @@ public class Captura extends JFrame {
         }.start();
     }
 
+    public static void main(String[] args) {
+        Aluno aluno = new Aluno();
+        aluno.setId(2);
+        aluno.setNome("foda");
+        aluno.setMatricula("23123");
+        aluno.setTelefone("2321");
+    
+        new Captura(aluno);
+    }
    
 }   
    

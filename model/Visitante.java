@@ -4,11 +4,19 @@ package model;
 
 public class Visitante {
 
+    public Visitante(int id, String nome, String cpf, String telefone, String motivo) {
+        this.id = id;
+        this.nome = nome;
+        this.cpf = cpf;
+        this.telefone = telefone;
+        this.motivo = motivo;
+    }
+
+
+
     //VARIAVEIS
-    private String nome;
-    private int cpf;
-    private int telefone;
-    private String motivo;
+    private int id;
+    private String nome, cpf, telefone, motivo;
     private byte[]foto;
 
   
@@ -17,13 +25,7 @@ public class Visitante {
         //CONSTRUTOR DEFAULT
     }
 
-    public Visitante(String nome, int cpf, int telefone, String motivo, byte[] foto) {
-        this.nome = nome;
-        this.cpf = cpf;
-        this.telefone = telefone;
-        this.motivo = motivo;
-        this.foto = foto;
-    }
+  
 
     //GETTERS E SETTERS
     
@@ -37,29 +39,6 @@ public class Visitante {
         this.nome = nome;
     }
 
-
-
-    public int getCpf() {
-        return cpf;
-    }
-
-
-
-    public void setCpf(int cpf) {
-        this.cpf = cpf;
-    }
-
-
-
-    public int getTelefone() {
-        return telefone;
-    }
-
-
-
-    public void setTelefone(int telefone) {
-        this.telefone = telefone;
-    }
 
 
 
@@ -83,6 +62,42 @@ public class Visitante {
 
     public void setFoto(byte[] foto) {
         this.foto = foto;
+    }
+
+
+
+    public int getId() {
+        return id;
+    }
+
+
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+
+
+    public String getCpf() {
+        return cpf;
+    }
+
+
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
     }
 
     

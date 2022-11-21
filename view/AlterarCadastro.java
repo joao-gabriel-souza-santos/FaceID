@@ -27,17 +27,17 @@ import model.Aluno;
 
 public class AlterarCadastro extends JFrame {
     // variaveis de ambiente
-    private ImageIcon fundo = new ImageIcon(getClass().getResource("telaCad.png"));
-    private JFormattedTextField  txtCpf, txtTelefone;
-    private JTextField txtNome;
+    private ImageIcon fundo = new ImageIcon(getClass().getResource("imagens\\telaCad.png"));
+    private JFormattedTextField  txtCpf, txtTelefone, txtmatricula;
+    private JTextField txtNome, txtId;
     private JLabel documento;
     private JButton salvar, carregarImg, voltar;
     private java.awt.image.BufferedImage imagem;
-    private int linhaSelecionada;
+    private int linhaSelecionada, id;
     private Aluno aluno;
     public AlterarCadastro(int linhaSelecionada) {
-        super("Tela de atualização de");
-
+        super("Tela de cadastro");
+        // CONFIGURAÇÃO DA TELA
         setSize(841, 600); // define o tamanho da tela
         setDefaultCloseOperation(EXIT_ON_CLOSE); // ação de fechar e aumentar a tela
         setLocationRelativeTo(null); // deixa a tela centralizada
@@ -52,27 +52,32 @@ public class AlterarCadastro extends JFrame {
         // adicionar campo nome
         txtNome = new JTextField();
         painel.add(txtNome);
-        txtNome.setBounds(100, 160, 320, 30);
+        txtNome.setBounds(60, 120, 350, 30);
         
         // adicionar campo cpf
    
             txtCpf = new JFormattedTextField();
             painel.add(Mascara.mascaraCpf(txtCpf));
-            txtCpf.setBounds(100, 240, 320, 30);
+            txtCpf.setBounds(60, 210, 350, 30);
          
     
             // adicionar campo telefone
             txtTelefone = new JFormattedTextField();
             painel.add(Mascara.mascaraTelefone(txtTelefone));
-            txtTelefone.setBounds(100, 320, 320, 30);
+            txtTelefone.setBounds(60, 290, 350, 30);
 
 
 
         // adicionar campo matricula
 
-        final JFormattedTextField txtmatricula = new JFormattedTextField();
+        txtmatricula = new JFormattedTextField();
         painel.add(Mascara.mascaraMatricula(txtmatricula));
-        txtmatricula.setBounds(100, 390, 320, 30);
+        txtmatricula.setBounds(60, 370, 350, 30);
+
+        //adiciona campo id
+        txtId = new JTextField();
+        painel.add(txtId);
+        txtId.setBounds(60, 450, 350, 30);
 
         // adicionar campo documento
         documento = new JLabel();
@@ -103,8 +108,8 @@ public class AlterarCadastro extends JFrame {
             // TODO Auto-generated catch block
             e1.printStackTrace();
         }
-
-        txtmatricula.setText(String.valueOf(aluno.getMatricula()));
+        txtId.setText(Integer.toString(aluno.getId()));
+        txtmatricula.setText(aluno.getMatricula());
         txtNome.setText(String.valueOf(aluno.getNome()));
         txtCpf.setText(String.valueOf(aluno.getCpf()));
         txtTelefone.setText(String.valueOf(aluno.getTelefone()));
@@ -112,7 +117,7 @@ public class AlterarCadastro extends JFrame {
 
 
         // adicionar botao salvar
-        salvar = new JButton("Salvar");
+        salvar = new JButton("Proximo");
         painel.add(salvar);
         salvar.setBounds(340, 500, 120, 40);
         salvar.addActionListener(new java.awt.event.ActionListener() {
@@ -120,14 +125,26 @@ public class AlterarCadastro extends JFrame {
             @Override
             public void actionPerformed(ActionEvent t) {
                 try {
-                  
+                    if (imagem!= null){
                         AlunoController ac = new AlunoController();
-                        ac.editar(Integer.parseInt(txtmatricula.getText()),txtNome.getText(), txtCpf.getText(), txtTelefone.getText(), ManipularImagem.getImgBytes(imagem));
+                        // ac.editar(Integer.parseInt(txtId.getText()),txtNome.getText(), txtCpf.getText(), txtTelefone.getText());
                         
-                        JOptionPane.showMessageDialog(null, "Atualização efetuada", "Cadastro", 1);
+                
                   
                         dispose();
                         TelaGerenciaMatricula.atualizaTabela();
+                    } else{
+                        
+                        aluno.setId(Integer.parseInt(txtId.getText()));
+                        aluno.setMatricula(txtmatricula.getText());
+                        aluno.setNome(txtNome.getText());
+                        aluno.setCpf(txtCpf.getText());
+                        aluno.setTelefone(txtTelefone.getText());
+                       
+                        dispose();
+                        new AlterarRec(aluno);
+                        
+                    }
                     
                 } catch (Exception a) {
                     JOptionPane.showMessageDialog(null, "Atualização não efetuada," + a.getLocalizedMessage(), "Cadastro", 0);
