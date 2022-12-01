@@ -28,6 +28,26 @@ public abstract class GenericDao {
         }
         state.execute();
         state.close();
+}  
+protected void saveDataHora (String sql, Object... parametros)throws SQLException{
+    PreparedStatement state = getConnection().prepareStatement(sql);
+
+    for(int i = 0 ; i  < parametros.length ; i++){
+        state.setObject(i + 1, parametros[i]);
+    }
+    state.execute();
+    state.close();
+}  
+
+protected void deleteID (String sql, Object... parametros)throws SQLException{
+    PreparedStatement state = getConnection().prepareStatement(sql);
+
+    for(int i = 0 ; i  < parametros.length ; i++){
+        state.setObject(i + 1, parametros[i]);
+    }
+    state.execute();
+    state.close();
+    connection.close();
 }   
 
     protected void save (String sql, Object... parametros)throws SQLException{
@@ -36,9 +56,6 @@ public abstract class GenericDao {
             for(int i = 0 ; i  < parametros.length ; i++){
                 state.setObject(i + 1, parametros[i]);
             }
-
-
-
             state.execute();
             state.close();
             connection.close();
@@ -64,7 +81,28 @@ public abstract class GenericDao {
         }
         state.execute();
         state.close();
-        connection.close();
+
+    }
+
+    protected void deleteEntrar(String sql, Object...parametros)throws SQLException{
+        PreparedStatement state = getConnection().prepareStatement(sql);
+
+        for (int i = 0 ; i <parametros.length ; i++){
+            state.setObject(i + 1, parametros[i]);
+        }
+        state.execute();
+        state.close();
+
+    }
+    
+    protected void deleteSair(String sql, Object...parametros)throws SQLException{
+        PreparedStatement state = getConnection().prepareStatement(sql);
+
+        for (int i = 0 ; i <parametros.length ; i++){
+            state.setObject(i + 1, parametros[i]);
+        }
+        state.execute();
+        state.close();
 
     }
 

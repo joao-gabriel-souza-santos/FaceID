@@ -57,13 +57,13 @@ public class Captura extends JFrame {
     private Captura.DaemonThread myThread = null;
 
     //JavaCV
-    VideoCapture webSource = null;
-    Mat cameraImage = new Mat();
-    CascadeClassifier cascade = new CascadeClassifier("D:\\projeto escola\\FaceID\\src\\recursos\\haarcascade_frontalface_alt.xml");
+    VideoCapture webSource = null; //variavel da camera
+    Mat cameraImage = new Mat(); //converte a imagem para uma matriz
+    CascadeClassifier cascade = new CascadeClassifier("D:\\projeto escola\\FaceID\\src\\recursos\\haarcascade_frontalface_alt.xml"); //cria o objeto do arquivo haarscade
 
     BytePointer mem = new BytePointer();
-    RectVector detectedFaces = new RectVector();
-    int numAmostras = 25, amostras = 1;
+    RectVector detectedFaces = new RectVector(); //vetor que armazena todas os rostoso
+    int numAmostras = 25 , amostras = 1; //contabiliza o numero de fotos armazenadas
 
     String matricula;
 
@@ -181,6 +181,7 @@ public class Captura extends JFrame {
         }
     }
     
+    //Cria uma thread que faz com que a imagem da camera fique dentro da label
     class DaemonThread implements Runnable {
 
         protected volatile boolean runnable = false;
@@ -190,47 +191,47 @@ public class Captura extends JFrame {
             synchronized (this) {
                 while (runnable) {
                     try {
-                        if (webSource.grab()) {
-                            webSource.retrieve(cameraImage);
+                        if (webSource.grab()) { //pega o frame da camera
+                            webSource.retrieve(cameraImage); //cameraImage vai pegar os dados da imagem
                             Graphics g = labelCaptura.getGraphics(); //mostra a imagem no jlabel
                             
 
                             Mat imageColor = new Mat(); //imagem colorida
-                            imageColor = cameraImage;
+                            imageColor = cameraImage; //armazena os dados da imagem colorida
 
-                            Mat imageGray = new Mat(); //imagem pb
+                            Mat imageGray = new Mat(); //imagem cinza
                             cvtColor(imageColor, imageGray, COLOR_BGRA2GRAY);
-//                            flip(cameraImage, cameraImage, +1);
+                            //transforma a imagem em cinza
 
-                            RectVector detectedFaces = new RectVector(); //face detectada
+                            RectVector detectedFaces = new RectVector(); //variavel que armazena as faces detectadas
                             cascade.detectMultiScale(imageColor, detectedFaces, 1.1, 1, 1, new Size(150, 150), new Size(500, 500));
 
                             for (int i = 0; i < detectedFaces.size(); i++) { //repetição pra encontrar as faces
-                                Rect dadosFace = detectedFaces.get(0);
+                                Rect dadosFace = detectedFaces.get(0); //vai salvar a primeira face detectada
 
-                                rectangle(imageColor, dadosFace, new Scalar(255, 255, 0, 2), 3, 0, 0);
+                                rectangle(imageColor, dadosFace, new Scalar(255, 255, 0, 2), 3, 0, 0); //formma um retangulo na primeira face detectada
 
-                                Mat face = new Mat(imageGray, dadosFace);
-                                opencv_imgproc.resize(face, face, new Size(160, 160));
+                                Mat face = new Mat(imageGray, dadosFace); //pega os dados do rosto
+                                opencv_imgproc.resize(face, face, new Size(160, 160)); //mantem sempre a face no tamanho padrão
 
-                                if (botaoCaptura.getModel().isPressed()) { //quando apertar o botão saveButton
+                                if (botaoCaptura.getModel().isPressed()) { //quando apertar o botão de captura
                                       
                                     if (amostras <= numAmostras) {
 //                                        salva a imagem cortada [160,160]
-//                                        nome do arquivo: idpessoa + a contagem de fotos. ex: person.10(id).6(sexta foto).jpg
-                                            String cropped = "D:\\projeto escola\\FaceID\\src\\fotos\\pessoa." + id+ "." + amostras + ".jpg";
-                                            imwrite(cropped, face);
+//                                        com o nome do arquivo: idpessoa + a contagem de fotos. ex: pessoa.10(id).6(sexta foto).jpg
+                                            String cropped = "D:\\projeto escola\\FaceID\\src\\fotos\\pessoa." + id+ "." + amostras + ".jpg"; //onde vai ser salvo e nome da foto capturada
+                                            imwrite(cropped, face); ///salva a captura
 
                                             //System.out.println("Foto " + amostra + " capturada\n");
-                                            labelContador.setText(String.valueOf(amostras + 1) + "/25");
-                                            amostras++;
+                                            labelContador.setText(String.valueOf(amostras + 1) + "/25"); //mostra quantas fotos foram tiradas
+                                            amostras++; //aumenta o contador das fotos
                                              
                                         }
                                         
-                                        if (amostras >= numAmostras) {
-                                            try{
+                                        if (amostras >= numAmostras) { //verifica se o total de fotos tiradas foi maior que 25 e se for maior
+                                            try{ 
                                                 inserirBanco(); //insere os dados no banco
-                                                new TrainLBPH().trainPhotos();
+                                                new TrainLBPH().trainPhotos(); //realiza o treinamento das imagens
                                                 JOptionPane.showMessageDialog(null, "Cadastro efetuado", "Cadastro", 1);
                                             }catch(Exception e){
                                                 JOptionPane.showMessageDialog(null, "Cadastro não efetuado," + e.getMessage(), "Cadastro", 0);
@@ -243,7 +244,7 @@ public class Captura extends JFrame {
 
                                     }
 
-                                 
+                                    //metodos para adicionar a camera na label
                                     imencode(".bmp", cameraImage, mem);
                                     Image im = ImageIO.read(new ByteArrayInputStream(mem.getStringBytes()));
                                     BufferedImage buff = (BufferedImage) im;
@@ -273,16 +274,16 @@ public class Captura extends JFrame {
 
     public void inserirBanco(){
         try {
-            if(this.codigo == 0 && motivo == null){
+            if(this.codigo == 0 && motivo == null){ //verifica se a pessoa é um aluno e salva no banco
                 AlunoController ac = new AlunoController();
                 ac.salvarAl(this.id, this.matricula, this.nome, this.cpf, this.telefone); 
             } else 
-                if(this.matricula == null && motivo ==  null){
+                if(this.matricula == null && motivo ==  null){ //verifica se a pessoa é um funcionario salva no banco
                     FuncionarioController func = new FuncionarioController();
                     func.salvarFunc(this.id, this.codigo, this.nome, this.cargo, this.telefone);
                 }
                     else 
-                        if(this.motivo != null){
+                        if(this.motivo != null){ //verifica se a pessoa é um visitante e salva no banco
                             VisitanteController visi = new VisitanteController();
                             visi.salvarVisi(this.id, this.cpf, this.nome, this.motivo, this.telefone);
                         }   
@@ -290,7 +291,8 @@ public class Captura extends JFrame {
             JOptionPane.showMessageDialog(null, "Cadastro não efetuado," + a.getMessage(), "Cadastro", 0);
         }
     }
-
+    
+    
     public void pararCamera(){
         myThread.runnable = false;
         webSource.release();
@@ -302,9 +304,9 @@ public class Captura extends JFrame {
         new Thread() {
             @Override
             public void run() {
-                webSource = new VideoCapture(0);
-
-                myThread = new Captura.DaemonThread();
+                webSource = new VideoCapture(0); // Puxa a imagem da webcam, a webcam padrão do notebook é do indice , caso possua uma outra webcam externa, utilize o indice 1
+                //inicia a thread
+                myThread = new Captura.DaemonThread(); 
                 Thread t = new Thread(myThread);
                 t.setDaemon(true);
                 myThread.runnable = true;
@@ -312,17 +314,6 @@ public class Captura extends JFrame {
             }
         }.start();
     }
-
-    public static void main(String[] args) {
-        Aluno aluno = new Aluno();
-        aluno.setId(2);
-        aluno.setNome("foda");
-        aluno.setMatricula("23123");
-        aluno.setTelefone("2321");
-    
-        new Captura(aluno);
-    }
-   
 }   
    
 

@@ -1,0 +1,24 @@
+Primeiramente, baixe a biblioteca JavaCv no link abaixo: 
+
+https://github.com/bytedeco/javacv/releases
+
+A versão do javaCv utiliza neste projeto é a versão JavaCV 1.5.7
+
+Após o download, adicione no projeto os seguintes JARS:
+
+ - todos que começam com Opencv
+ -todos que começam com java (javacpp, javacv)
+ - todos os ffmpeg
+ 
+Copie e cole os arquivos  presentes na pasta de recursos:
+
+classificadorEigenFaces.yml
+classificadorFisherFaces.yml
+classificadorLBPH.yml
+haarcascade_frontalface_alt.yml 
+
+
+
+a implementação do reconhecimento facial está na View, nas classes: Captura e Reconhecimento. Eles utilizam
+o treinamento do algoritmo que está presente na packge UTIL, na classe TrainLBPH.java
+Alguns dos metódos utilizados no reconhecimento facial que fazem conexão com o banco estão no packge DAO

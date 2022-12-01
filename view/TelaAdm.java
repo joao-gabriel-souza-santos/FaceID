@@ -40,7 +40,7 @@ public class TelaAdm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 //JOptionPane.showMessageDialog(null, "Ainda sem função", "Reconhecimento facial", 1);
                 dispose();
-                Reconhecimento rec = new Reconhecimento();
+                SelecionaRec rec = new SelecionaRec();
                 rec.setVisible(true);
             }
 

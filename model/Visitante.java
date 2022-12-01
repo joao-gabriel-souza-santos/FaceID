@@ -4,6 +4,21 @@ package model;
 
 public class Visitante {
 
+    public Visitante(int id, String nome, String cpf, String telefone, String motivo, String dataEntrar,
+            String horarioEntrar, String dataSair, String horarioSair) {
+        this.id = id;
+        this.nome = nome;
+        this.cpf = cpf;
+        this.telefone = telefone;
+        this.motivo = motivo;
+        this.dataEntrar = dataEntrar;
+        this.horarioEntrar = horarioEntrar;
+        this.dataSair = dataSair;
+        this.horarioSair = horarioSair;
+    }
+
+
+
     public Visitante(int id, String nome, String cpf, String telefone, String motivo) {
         this.id = id;
         this.nome = nome;
@@ -18,6 +33,10 @@ public class Visitante {
     private int id;
     private String nome, cpf, telefone, motivo;
     private byte[]foto;
+    private String dataEntrar;
+    private String horarioEntrar;
+    private String dataSair;
+    private String horarioSair;
 
   
     //CONSTRUTORES
@@ -98,6 +117,54 @@ public class Visitante {
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
+    }
+
+
+
+    public String getDataEntrar() {
+        return dataEntrar;
+    }
+
+
+
+    public void setDataEntrar(String dataEntrar) {
+        this.dataEntrar = dataEntrar;
+    }
+
+
+
+    public String getHorarioEntrar() {
+        return horarioEntrar;
+    }
+
+
+
+    public void setHorarioEntrar(String horarioEntrar) {
+        this.horarioEntrar = horarioEntrar;
+    }
+
+
+
+    public String getDataSair() {
+        return dataSair;
+    }
+
+
+
+    public void setDataSair(String dataSair) {
+        this.dataSair = dataSair;
+    }
+
+
+
+    public String getHorarioSair() {
+        return horarioSair;
+    }
+
+
+
+    public void setHorarioSair(String horarioSair) {
+        this.horarioSair = horarioSair;
     }
 
     

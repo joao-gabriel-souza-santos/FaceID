@@ -5,6 +5,8 @@ package dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import javax.swing.JOptionPane;
 
@@ -36,6 +38,44 @@ public class UtilizaDAO extends GenericDao {
         String sql = "INSERT INTO Visitante(id_visi, cpf, nome, motivo, telefone) values (?, ?, ?, ?, ?)";
         saveID(sql2, visi.getId());
         save(sql,visi.getId(), visi.getCpf(), visi.getNome(), visi.getMotivo(), visi.getTelefone());
+    }
+
+    public void salvardatahoraAl(LocalDate localDate, LocalTime localHora, int id) throws SQLException {
+        String sql2 = "insert into Entrar (dataRec, hora, usuarioID ) values (?, ?, ?)";
+        String sql = "UPDATE aluno SET dataEntrar = ?, horarioEntrar = ? WHERE id_AL= ?";
+        saveDataHora(sql2, localDate, localHora, id);
+        update(sql, localDate, localHora, id);
+    }
+    public void salvardatahoraFunc(LocalDate localDate, LocalTime localHora, int id) throws SQLException {
+        String sql2 = "insert into Entrar (dataRec, hora, usuarioID ) values (?, ?, ?)";
+        String sql = "UPDATE Funcionario SET dataEntrar = ?, horarioEntrar = ? WHERE id_func= ?";
+        saveDataHora(sql2, localDate, localHora, id);
+        update(sql, localDate, localHora, id);
+    }
+    public void salvardatahoraVisi(LocalDate localDate, LocalTime localHora, int id) throws SQLException {
+        String sql2 = "insert into Entrar (dataRec, hora, usuarioID ) values (?, ?, ?)";
+        String sql = "UPDATE Visitante SET dataEntrar = ?, horarioEntrar = ? WHERE id_visi= ?";
+        saveDataHora(sql2, localDate, localHora, id);
+        update(sql, localDate, localHora, id);
+    }
+
+    public void salvardatahoraSaidaAl(LocalDate localDate, LocalTime localHora, int id) throws SQLException {
+        String sql2 = "insert into Sair (dataSaida, hora, usuarioID ) values (?, ?, ?)";
+        String sql = "UPDATE aluno SET dataSair = ?, horarioSair= ? WHERE id_AL= ?";
+        saveDataHora(sql2, localDate, localHora, id);
+        update(sql, localDate, localHora, id);
+    }
+    public void salvardatahoraSaidaFunc(LocalDate localDate, LocalTime localHora, int id) throws SQLException {
+        String sql2 = "insert into Sair(dataSaida, hora, usuarioID ) values (?, ?, ?)";
+        String sql = "UPDATE Funcionario SET dataSair = ?, horarioSair = ? WHERE id_func= ?";
+        saveDataHora(sql2, localDate, localHora, id);
+        update(sql, localDate, localHora, id);
+    }
+    public void salvardatahoraSaidaVisi(LocalDate localDate, LocalTime localHora, int id) throws SQLException {
+        String sql2 = "insert into Sair(dataSaida, hora, usuarioID ) values (?, ?, ?)";
+        String sql = "UPDATE Visitante SET dataSair = ?, horarioSair = ? WHERE id_visi= ?";
+        saveDataHora(sql2, localDate, localHora, id);
+        update(sql, localDate, localHora, id);
     }
 
     public  int mostrarID() throws SQLException {
@@ -70,6 +110,10 @@ public class UtilizaDAO extends GenericDao {
                 aluno.setNome(rs.getString("nome"));
                 aluno.setCpf(rs.getString("cpf"));
                 aluno.setTelefone(rs.getString("telefone"));
+                aluno.setDataEntrar(rs.getString("dataEntrar"));
+                aluno.setHorarioEntrar(rs.getString("horarioEntrar"));
+                aluno.setDataSair(rs.getString("dataSair"));
+                aluno.setHorarioSair(rs.getString("horarioSair"));
                 aluno.setFoto(rs.getBytes("foto"));
                 alunos.add(aluno);
             }
@@ -99,6 +143,11 @@ public class UtilizaDAO extends GenericDao {
                 func.setNome(rs.getString("nome"));
                 func.setCargo(rs.getString("cargo"));
                 func.setTelefone(rs.getString("telefone"));
+                func.setDataEntrar(rs.getString("dataEntrar"));
+                func.setHorarioEntrar(rs.getString("horarioEntrar"));
+                func.setDataSair(rs.getString("dataSair"));
+                func.setHorarioSair(rs.getString("horarioSair"));               
+               
                 funcionarios.add(func);
             }
 
@@ -127,6 +176,10 @@ public class UtilizaDAO extends GenericDao {
                 visi.setNome(rs.getString("nome"));
                 visi.setMotivo(rs.getString("motivo"));
                 visi.setTelefone(rs.getString("telefone"));
+                visi.setDataEntrar(rs.getString("dataEntrar"));
+                visi.setHorarioEntrar(rs.getString("horarioEntrar"));
+                visi.setDataSair(rs.getString("dataSair"));
+                visi.setHorarioSair(rs.getString("horarioSair"));  
                 visitantes.add(visi);
             }
 
@@ -162,19 +215,41 @@ public class UtilizaDAO extends GenericDao {
     }
 
 
-    public void excluir(String string) throws SQLException {
+    public void excluir(String string, int id) throws SQLException {
         String sql = "DELETE FROM Aluno WHERE matricula = ?";
+        String sql1 = "DELETE FROM Entrar WHERE usuarioId = ?";
+        String sql3 = "DELETE FROM Sair WHERE usuarioID = ?";
+        String sql2 = "DELETE FROM UsuarioID WHERE id = ?";
+    
         delete(sql, string);
+        deleteEntrar(sql1, id);
+        deleteSair( sql3, id);
+        deleteID(sql2, id);
     }
 
-    public void excluirFuncionario(int codigo) throws SQLException {
+    public void excluirFuncionario(int codigo, int id) throws SQLException {
+       
         String sql = "DELETE FROM Funcionario WHERE codigo = ?";
+        String sql1 = "DELETE FROM Entrar WHERE usuarioId = ?";
+        String sql3 = "DELETE FROM Sair WHERE usuarioID = ?";
+        String sql2 = "DELETE FROM UsuarioID WHERE id = ?";
+    
         delete(sql, codigo);
+        deleteEntrar(sql1, id);
+        deleteSair( sql3, id);
+        deleteID(sql2, id);
     }
 
-    public void excluirVisitante(String cpf) throws SQLException {
+    public void excluirVisitante(String cpf, int id) throws SQLException {
         String sql = "DELETE FROM Visitante WHERE cpf = ?";
+        String sql1 = "DELETE FROM Entrar WHERE usuarioId = ?";
+        String sql3 = "DELETE FROM Sair WHERE usuarioID = ?";
+        String sql2 = "DELETE FROM UsuarioID WHERE id = ?";
+    
         delete(sql, cpf);
+        deleteEntrar(sql1, id);
+        deleteSair( sql3, id);
+        deleteID(sql2, id);
     }
 
 
@@ -193,6 +268,8 @@ public class UtilizaDAO extends GenericDao {
             aluno.setNome(rs.getString("nome"));
             aluno.setCpf(rs.getString("cpf"));
             aluno.setTelefone(rs.getString("telefone"));
+            aluno.setDataEntrar(rs.getString("dataEntrar"));
+            aluno.setHorarioEntrar(rs.getString("horarioEntrar"));
         }
         rs.close();
         state.close();
@@ -200,7 +277,7 @@ public class UtilizaDAO extends GenericDao {
 
         return aluno;
     }
-
+ //metodo que verifica se a pessoa reconhecida está no banco dos alunos
     public Aluno pesquisarCad(int id) throws SQLException {
         String sql = "select distinct * from aluno a join usuarioID on a.id_AL =?";
         Aluno aluno = null;
@@ -223,7 +300,7 @@ public class UtilizaDAO extends GenericDao {
 
         return aluno;
     }
-
+    //metodo que verifica se a pessoa reconhecida está no banco dos funcionarios
     public Funcionario pesquisarFunc(int id) throws SQLException {
         String sql = "select distinct * from funcionario f  join usuarioID i on f.id_func = ?";
         Funcionario func = null;
@@ -239,6 +316,10 @@ public class UtilizaDAO extends GenericDao {
             func.setNome(rs.getString("nome"));
             func.setCargo(rs.getString("cargo"));
             func.setTelefone(rs.getString("telefone"));
+            func.setDataEntrar(rs.getString("dataEntrar"));
+            func.setHorarioEntrar(rs.getString("horarioEntrar"));
+            func.setDataSair(rs.getString("dataSair"));
+            func.setHorarioSair(rs.getString("horarioSair")); 
         }
         rs.close();
         state.close();
@@ -247,6 +328,61 @@ public class UtilizaDAO extends GenericDao {
         return func;
     }
 
+    public Funcionario pesquisarCadFunc(int codigo) throws SQLException {
+        String sql = "select * from funcionario where codigo = ?";
+        Funcionario func = null;
+        PreparedStatement state = getConnection().prepareStatement(sql);
+
+        state.setString(1,Integer.toString(codigo));
+        ResultSet rs = state.executeQuery();
+
+        while (rs.next()) {
+            func = new Funcionario();
+            func.setId(rs.getInt("id_func"));
+            func.setCodigo(rs.getInt("codigo"));
+            func.setNome(rs.getString("nome"));
+            func.setCargo(rs.getString("cargo"));
+            func.setTelefone(rs.getString("telefone"));
+            func.setDataEntrar(rs.getString("dataEntrar"));
+            func.setHorarioEntrar(rs.getString("horarioEntrar"));
+            func.setDataSair(rs.getString("dataSair"));
+            func.setHorarioSair(rs.getString("horarioSair")); 
+        }
+        rs.close();
+        state.close();
+        getConnection().close();
+
+        return func;
+    }
+
+    public Visitante pesquisarCadVisi(String cpf) throws SQLException {
+        String sql = "select * from Visitante where cpf= ?";
+        Visitante visi = null;
+        PreparedStatement state = getConnection().prepareStatement(sql);
+
+        state.setString(1,cpf);
+        ResultSet rs = state.executeQuery();
+
+        while (rs.next()) {
+            visi= new Visitante();
+            visi.setId(rs.getInt("id_visi"));
+            visi.setCpf(rs.getString("cpf"));
+            visi.setNome(rs.getString("nome"));
+            visi.setMotivo(rs.getString("motivo"));
+            visi.setTelefone(rs.getString("telefone"));
+            visi.setDataEntrar(rs.getString("dataEntrar"));
+            visi.setHorarioEntrar(rs.getString("horarioEntrar"));
+            visi.setDataSair(rs.getString("dataSair"));
+            visi.setHorarioSair(rs.getString("horarioSair"));  
+    
+        }
+        rs.close();
+        state.close();
+        getConnection().close();
+
+        return visi;
+    }
+     //metodo que verifica se a pessoa reconhecida está no banco dos visitantes
     public Visitante pesquisarVisi(int id) throws SQLException {
         String sql = "select distinct * from visitante v  join usuarioID i on v.id_visi = ?";
         Visitante visi = null;

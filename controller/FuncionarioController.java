@@ -28,15 +28,20 @@ public class FuncionarioController {
         new UtilizaDAO().editarFuncionario(func);
     }
 
-    public void excluir(int codigo)
+    public void excluir(int codigo, int id)
             throws SQLException, ParseException {
 
-        new UtilizaDAO().excluirFuncionario(codigo);
+        new UtilizaDAO().excluirFuncionario(codigo, id);
     }
 
     public Funcionario pesquisarFunc(int id) throws SQLException {
         UtilizaDAO dao = new UtilizaDAO();
         return dao.pesquisarFunc(id);
+    }
+
+    public static Funcionario pesquisarCadFunc(int codigo) throws SQLException {
+        UtilizaDAO dao = new UtilizaDAO();
+        return dao.pesquisarCadFunc(codigo);
     }
 
     public List listarFunc() {

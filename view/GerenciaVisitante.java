@@ -37,7 +37,7 @@ public class GerenciaVisitante extends JFrame {
     private JButton voltar, botaoPesquisar, botaoListar, botaoAtualizar, botaoDeletar;
     private JFormattedTextField txtPesquisar;
     private static JTable tabela;
-    private static String[] colunas = { "ID Visitante", "Cpf", "Nome", "motivo", "Telefone" };
+    private static String[] colunas = { "ID Visitante", "Cpf", "Nome", "motivo", "Telefone", "DataEntrada", "horaentrada", "DataSaida", "HorarioSaida"};
     private static Object[][] dados = {};
     private static List visitanteList = new VisitanteController().listarVisitante();
 
@@ -59,12 +59,12 @@ public class GerenciaVisitante extends JFrame {
         tabela = new JTable(tableModel);
         JScrollPane barraRolagem = new JScrollPane(tabela);
         painel.add(barraRolagem);
-        barraRolagem.setBounds(190, 200, 500, 290);
+        barraRolagem.setBounds(190, 200, 580, 290);
 
         /////////////////////////////// ADICIONA CAMPO
         /////////////////////////////// PESQUISAR///////////////////////////////
         txtPesquisar = new JFormattedTextField();
-        painel.add(Mascara.mascaraMatricula(txtPesquisar));
+        painel.add(Mascara.mascaraCpf(txtPesquisar));
         txtPesquisar.setBounds(210, 160, 290, 30);
 
         /////////////////////////////// ADICIONA BOTÃO
@@ -77,7 +77,7 @@ public class GerenciaVisitante extends JFrame {
 
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        // pesquisaCad(txtPesquisar.getText());
+                        pesquisaCad(txtPesquisar.getText());
                     }
 
                 });
@@ -139,7 +139,7 @@ public class GerenciaVisitante extends JFrame {
                             VisitanteController vc = new VisitanteController();
                             Visitante visi = (Visitante) vc.listarVisitante().get(linhaSelecionada);
                             try {
-                               vc.excluir(visi.getCpf());
+                               vc.excluir(visi.getCpf(), visi.getId());
                                 JOptionPane.showMessageDialog(null, "Cadastr deletado", "Cadastro", 1);
                                 atualizaTabela();
                             } catch (Exception e1) {
@@ -192,27 +192,30 @@ public class GerenciaVisitante extends JFrame {
 
     }
 
-    // public void pesquisaCad(String matricula) {
-    // TableModel tTabela = (DefaultTableModel) tabela.getModel();
-    // ((DefaultTableModel) tTabela).setNumRows(0);
-    // try {
+    public void pesquisaCad(String cpf) {
+    TableModel tTabela = (DefaultTableModel) tabela.getModel();
+    ((DefaultTableModel) tTabela).setNumRows(0);
+    try {
 
-    // Aluno aluno = new AlunoController().pesquisaMatricula(matricula);
-    // int linha = 0;
+    Visitante visi = new VisitanteController().pesquisarCadVisi(cpf);
+    int linha = 0;
 
-    // ((DefaultTableModel) tTabela).addRow(new Object[] { 1 });
-    // tabela.setValueAt(aluno.getId(), linha, 0);
-    // tabela.setValueAt(aluno.getMatricula(), linha, 1);
-    // tabela.setValueAt(aluno.getNome(), linha, 2);
-    // tabela.setValueAt(aluno.getCpf(), linha, 3);
-    // tabela.setValueAt(aluno.getTelefone(), linha, 4);
+    ((DefaultTableModel) tTabela).addRow(new Object[] { 1 });
+    tabela.setValueAt(visi.getId(), linha, 0);
+    tabela.setValueAt(visi.getCpf(), linha, 1);
+    tabela.setValueAt(visi.getNome(), linha, 2);
+    tabela.setValueAt(visi.getMotivo(), linha, 3);
+    tabela.setValueAt(visi.getTelefone(), linha, 4);
+    tabela.setValueAt(visi.getDataEntrar(), linha, 5);
+    tabela.setValueAt(visi.getHorarioEntrar(), linha, 6);
+    tabela.setValueAt(visi.getDataSair(), linha, 7);
+    tabela.setValueAt(visi.getHorarioSair(), linha, 8);
+    } catch (Exception e) {
+    JOptionPane.showMessageDialog(null,
+    "Problemas ao localizar contaton" + e.getLocalizedMessage());
+    }
 
-    // } catch (Exception e) {
-    // JOptionPane.showMessageDialog(null,
-    // "Problemas ao localizar contaton" + e.getLocalizedMessage());
-    // }
-
-    // }
+    }
 
     public static void atualizaTabela() {
         TableModel tTabela = (DefaultTableModel) tabela.getModel();
@@ -229,6 +232,10 @@ public class GerenciaVisitante extends JFrame {
             tabela.setValueAt(visi.getNome(), linha, 2);
             tabela.setValueAt(visi.getMotivo(), linha, 3);
             tabela.setValueAt(visi.getTelefone(), linha, 4);
+            tabela.setValueAt(visi.getDataEntrar(), linha, 5);
+            tabela.setValueAt(visi.getHorarioEntrar(), linha, 6);
+            tabela.setValueAt(visi.getDataSair(), linha, 7);
+            tabela.setValueAt(visi.getHorarioSair(), linha, 8);
         }
     }
 }

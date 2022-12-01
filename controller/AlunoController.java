@@ -59,8 +59,8 @@ public class AlunoController {
     
 
 
-    public void excluir (String string) throws SQLException{
-        new UtilizaDAO().excluir(string);
+    public void excluir (String string, int id) throws SQLException{
+        new UtilizaDAO().excluir(string, id);
     }
 
     public Aluno pesquisarCad(int id) throws SQLException{

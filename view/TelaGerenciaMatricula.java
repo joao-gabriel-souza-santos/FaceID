@@ -31,7 +31,7 @@ public class TelaGerenciaMatricula extends JFrame {
     private JButton voltar, botaoPesquisar, botaoListar, botaoAtualizar, botaoDeletar;
     private JFormattedTextField txtPesquisar;
     private static JTable tabela;
-    private static String[] colunas = { "ID aluno", "Matricula", "Nome", "CPF", "Telefone" };
+    private static String[] colunas = { "ID aluno", "Matricula", "Nome", "CPF", "Telefone", "dataEntrada" ,"HorarioEntrada", "DataSaida","HorarioSaida" };
     private static Object[][] dados = {};
     private static List alunoList = new AlunoController().listarCadastros();
 
@@ -54,7 +54,7 @@ public class TelaGerenciaMatricula extends JFrame {
         tabela = new JTable(tableModel);
         JScrollPane barraRolagem = new JScrollPane(tabela);
         painel.add(barraRolagem);
-        barraRolagem.setBounds(190, 200, 500, 290);
+        barraRolagem.setBounds(190, 200, 580, 290);
 
         /////////////////////////////// ADICIONA CAMPO
         /////////////////////////////// PESQUISAR///////////////////////////////
@@ -134,11 +134,11 @@ public class TelaGerenciaMatricula extends JFrame {
                         AlunoController ac = new AlunoController();
                         Aluno al = (Aluno) ac.listarCadastros().get(linhaSelecionada);
                         try {
-                            ac.excluir(al.getMatricula());
+                            ac.excluir(al.getMatricula(), al.getId());
                             atualizaTabela();
                             JOptionPane.showMessageDialog(null, "Cadastr deletado", "Cadastro", 1);
                         } catch (Exception e1) {
-                            JOptionPane.showMessageDialog(null, " Cadastro não foi deletado com sucesso", "Cadastro",
+                            JOptionPane.showMessageDialog(null, " Cadastro não foi deletado com sucesso" + e1.getMessage(), "Cadastro",
                             JOptionPane.INFORMATION_MESSAGE);
                         }  
                     } else {
@@ -200,7 +200,10 @@ public class TelaGerenciaMatricula extends JFrame {
             tabela.setValueAt(aluno.getNome(), linha, 2);
             tabela.setValueAt(aluno.getCpf(), linha, 3);
             tabela.setValueAt(aluno.getTelefone(), linha, 4);
-
+            tabela.setValueAt(aluno.getDataEntrar(), linha, 5);
+            tabela.setValueAt(aluno.getHorarioEntrar(), linha, 6);
+            tabela.setValueAt(aluno.getDataSair(), linha, 7);
+            tabela.setValueAt(aluno.getHorarioSair(), linha, 8);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,
                     "Problemas ao localizar contaton" + e.getLocalizedMessage());
@@ -223,6 +226,10 @@ public class TelaGerenciaMatricula extends JFrame {
             tabela.setValueAt(aluno.getNome(), linha, 2);
             tabela.setValueAt(aluno.getCpf(), linha, 3);
             tabela.setValueAt(aluno.getTelefone(), linha, 4);
+            tabela.setValueAt(aluno.getDataEntrar(), linha, 5);
+            tabela.setValueAt(aluno.getHorarioEntrar(), linha, 6);
+            tabela.setValueAt(aluno.getDataSair(), linha, 7);
+            tabela.setValueAt(aluno.getHorarioSair(), linha, 8);
         }
     }
 

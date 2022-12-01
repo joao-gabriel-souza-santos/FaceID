@@ -34,7 +34,7 @@ public class GerenciaFuncionario extends JFrame {
         private JButton voltar, botaoPesquisar, botaoListar, botaoAtualizar, botaoDeletar;
         private JFormattedTextField txtPesquisar;
         private static JTable tabela;
-        private static String[] colunas = { "ID funcionario", "Matricula", "Nome", "Cargo", "Telefone" };
+        private static String[] colunas = { "ID funcionario", "Codigo", "Nome", "Cargo", "Telefone",  "Data Entrada","Hora Entrada",  "DataSaida","HorarioSaida" };
         private static Object[][] dados = {};
         private static List funcionarioList = new FuncionarioController().listarFunc();
 
@@ -57,12 +57,12 @@ public class GerenciaFuncionario extends JFrame {
             tabela = new JTable(tableModel);
             JScrollPane barraRolagem = new JScrollPane(tabela);
             painel.add(barraRolagem);
-            barraRolagem.setBounds(190, 200, 500, 290);
+            barraRolagem.setBounds(190, 200, 580, 290);
     
             /////////////////////////////// ADICIONA CAMPO
             /////////////////////////////// PESQUISAR///////////////////////////////
             txtPesquisar = new JFormattedTextField();
-            painel.add(Mascara.mascaraMatricula(txtPesquisar));
+            painel.add(txtPesquisar);
             txtPesquisar.setBounds(210, 160, 290, 30);
     
             /////////////////////////////// ADICIONA BOTÃO
@@ -75,7 +75,7 @@ public class GerenciaFuncionario extends JFrame {
     
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                           // pesquisaCad(txtPesquisar.getText());
+                           pesquisaCad(Integer.parseInt(txtPesquisar.getText()));
                         }
     
                     });
@@ -137,7 +137,7 @@ public class GerenciaFuncionario extends JFrame {
                             FuncionarioController fc = new FuncionarioController();
                             Funcionario func = (Funcionario) fc.listarFunc().get(linhaSelecionada);
                             try {
-                                fc.excluir(func.getCodigo());
+                                fc.excluir(func.getCodigo(), func.getId());
                                 atualizaTabela();
                                 JOptionPane.showMessageDialog(null, "Cadastr deletado", "Cadastro", 1);
                             } catch (Exception e1) {
@@ -189,27 +189,30 @@ public class GerenciaFuncionario extends JFrame {
     
         }
     
-        // public void pesquisaCad(String matricula) {
-        //     TableModel tTabela = (DefaultTableModel) tabela.getModel();
-        //     ((DefaultTableModel) tTabela).setNumRows(0);
-        //     try {
+        public void pesquisaCad(int codigo) {
+            TableModel tTabela = (DefaultTableModel) tabela.getModel();
+            ((DefaultTableModel) tTabela).setNumRows(0);
+            try {
     
-        //         Aluno aluno = new AlunoController().pesquisaMatricula(matricula);
-        //         int linha = 0;
+                Funcionario func = (Funcionario) FuncionarioController.pesquisarCadFunc(codigo);
+                int linha = 0;
     
-        //         ((DefaultTableModel) tTabela).addRow(new Object[] { 1 });
-        //         tabela.setValueAt(aluno.getId(), linha, 0);
-        //         tabela.setValueAt(aluno.getMatricula(), linha, 1);
-        //         tabela.setValueAt(aluno.getNome(), linha, 2);
-        //         tabela.setValueAt(aluno.getCpf(), linha, 3);
-        //         tabela.setValueAt(aluno.getTelefone(), linha, 4);
+                ((DefaultTableModel) tTabela).addRow(new Object[] { 1 });
+                tabela.setValueAt( func.getId(), linha, 0);
+                tabela.setValueAt( func.getCodigo(), linha, 1);
+                tabela.setValueAt( func.getNome(), linha, 2);
+                tabela.setValueAt( func.getCargo(), linha, 3);
+                tabela.setValueAt( func.getTelefone(), linha, 4);
+                tabela.setValueAt( func.getDataEntrar(), linha, 5);
+                tabela.setValueAt( func.getHorarioEntrar(), linha, 6);
+                tabela.setValueAt( func.getDataSair(), linha, 7);
+                tabela.setValueAt( func.getHorarioSair(), linha, 8);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null,
+                        "Problemas ao localizar contaton" + e.getLocalizedMessage());
+            }
     
-        //     } catch (Exception e) {
-        //         JOptionPane.showMessageDialog(null,
-        //                 "Problemas ao localizar contaton" + e.getLocalizedMessage());
-        //     }
-    
-        // }
+        }
     
         public static void atualizaTabela() {
             TableModel tTabela = (DefaultTableModel) tabela.getModel();
@@ -226,6 +229,10 @@ public class GerenciaFuncionario extends JFrame {
                 tabela.setValueAt( func.getNome(), linha, 2);
                 tabela.setValueAt( func.getCargo(), linha, 3);
                 tabela.setValueAt( func.getTelefone(), linha, 4);
+                tabela.setValueAt( func.getDataEntrar(), linha, 5);
+                tabela.setValueAt( func.getHorarioEntrar(), linha, 6);
+                tabela.setValueAt( func.getDataSair(), linha, 7);
+                tabela.setValueAt( func.getHorarioSair(), linha, 8);
             }
         }
     

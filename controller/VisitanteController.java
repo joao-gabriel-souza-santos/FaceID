@@ -41,10 +41,10 @@ public class VisitanteController {
         return null;
     }
 
-    public void excluir(String cpf){
+    public void excluir(String cpf, int id){
         UtilizaDAO dao = new UtilizaDAO();
         try {
-            dao.excluirVisitante(cpf);
+            dao.excluirVisitante(cpf, id);
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -54,5 +54,10 @@ public class VisitanteController {
     public Visitante pesquisarVisi(int id) throws SQLException {
         UtilizaDAO dao = new UtilizaDAO();
         return dao.pesquisarVisi(id);
+    }
+
+    public Visitante pesquisarCadVisi(String cpf) throws SQLException {
+        UtilizaDAO dao = new UtilizaDAO();
+        return dao.pesquisarCadVisi(cpf);
     }
 }

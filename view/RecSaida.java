@@ -1,5 +1,4 @@
 package view;
-
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -41,9 +40,8 @@ import model.Funcionario;
 import model.Visitante;
 
 import java.awt.image.BufferedImage;
-
-public class Reconhecimento extends JFrame {
-   private DaemonThread myThread = null; 
+public class RecSaida extends JFrame {
+    private DaemonThread myThread = null; 
    private VideoCapture webSource = null;
    private Mat cameraImage = new Mat();
    private  CascadeClassifier cascade = new CascadeClassifier("D:\\projeto escola\\FaceID\\src\\recursos\\haarcascade_frontalface_alt.xml");
@@ -58,12 +56,11 @@ public class Reconhecimento extends JFrame {
     private ImageIcon fundo = new ImageIcon(getClass().getResource("imagens\\TelaReconhecimento.png"));
     private JLabel labelMatricula, labelNome, labelReconhecimento, labelOcupacao;
     private JButton voltar;
-   
-    public Reconhecimento (){
-        generateComponents(); //gera os componentes da interface
+    public RecSaida(){
+        generateComponents();
 
-        recognizer.read("D:\\projeto escola\\FaceID\\src\\recursos\\classificadorLBPH.yml"); //lê o arquivo de treinamento
-        recognizer.setThreshold(60); //determina o valor minimo para ser reconhecido
+        recognizer.read("D:\\projeto escola\\FaceID\\src\\recursos\\classificadorLBPH.yml");
+        recognizer.setThreshold(60);
         iniciarCamera();
     }
 
@@ -111,8 +108,8 @@ public class Reconhecimento extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                SelecionaRec rec= new SelecionaRec();
-                rec.setVisible(true);           
+                TelaAdm adm = new TelaAdm();
+                adm.setVisible(true);           
             }
 
         });
@@ -207,14 +204,14 @@ public class Reconhecimento extends JFrame {
 
     private void  reconhecimentoFunc(){
         try { 
-            Funcionario func = new FuncionarioController().pesquisarFunc(id); //verifica se a pessoa está registrada no banco através do id
-            if(func.getNome() != null){ //se a pessoa for recenhecida
+            Funcionario func = new FuncionarioController().pesquisarFunc(id); //pesquisa a pessoa reconhecida no banco de dados
+            if(func.getNome() != null){ //se a pessoa for reconhecida
                 UtilizaDAO dao = new UtilizaDAO();
-                labelNome.setText(func.getNome()); //coloca o nome da pessoa na label nome
-                labelOcupacao.setText("Funcionario"); //coloca a ocupação da pessoa
+                labelNome.setText(func.getNome()); //adiciona  o nome da pessoa na label
+                labelOcupacao.setText("Funcionario"); //adiciona a ocupação
                 LocalDate data = LocalDate.now(); //pega a data atual
                 LocalTime hora = LocalTime.now(); //pega a hora atual
-                dao.salvardatahoraFunc(data, hora, id); //salva o horário em que o funcionario foi reconhecido
+                dao.salvardatahoraSaidaFunc(data, hora, id); //salva o horário em que o funcionario foi reconhecido
             }else {
                 labelNome.setText("");
             }
@@ -233,7 +230,7 @@ public class Reconhecimento extends JFrame {
                 labelOcupacao.setText("Aluno");
                 LocalDate data = LocalDate.now(); //pega a data atual
                 LocalTime hora = LocalTime.now(); //pega a hora atual
-                dao.salvardatahoraAl(data, hora, id); //salva o horário em que o aluno foi reconhecido
+                dao.salvardatahoraSaidaAl(data, hora, id); //salva o horário em que o aluno foi reconhecido
             } else {
                 labelNome.setText("");
             }
@@ -245,14 +242,14 @@ public class Reconhecimento extends JFrame {
 
     private void  reconhecimentoVisi(){
         try { 
-            Visitante visi = new VisitanteController().pesquisarVisi(id); //verifica se o id da pessoa é de um vistante no banco de dados
+            Visitante visi = new VisitanteController().pesquisarVisi(id); //verifica se a pessoa está registrada no banco de dados como visitante
             UtilizaDAO dao = new UtilizaDAO();
-            if(visi.getNome() != null){ //se a pessoa for reconhecida como visitante
-                labelNome.setText(visi.getNome()); // coloca o nome da pessoa na label
-                labelOcupacao.setText("Visitante");
+            if(visi.getNome() != null){ // se a pessoa estiver registrada no banco
+                labelNome.setText(visi.getNome()); //adiciona o nome da pessoa na label
+                labelOcupacao.setText("Visitante"); //adiciona a ocupação
                 LocalDate data = LocalDate.now(); //pega a data atual
                 LocalTime hora = LocalTime.now(); //pega a hora atual
-                dao.salvardatahoraVisi(data, hora, id); //salva o horário em que o aluno foi reconhecido
+                dao.salvardatahoraSaidaVisi(data, hora, id); //salva o horário em que o aluno foi reconhecido
                 
             } else {
                 labelNome.setText("");
@@ -273,9 +270,9 @@ public class Reconhecimento extends JFrame {
         new Thread() {
             @Override
             public void run() {
-                webSource = new VideoCapture(0); // Puxa a imagem da webcam, a webcam padrão do notebook é do indice , caso possua uma outra webcam externa, utilize o indice 1
+                webSource = new VideoCapture(0);// Puxa a imagem da webcam, a webcam padrão do notebook é do indice , caso possua uma outra webcam externa, utilize o indice 1
                 //inicia a thread
-                myThread = new Reconhecimento.DaemonThread();
+                myThread = new RecSaida.DaemonThread();
                 Thread t = new Thread(myThread);
                 t.setDaemon(true);
                 myThread.runnable = true;
